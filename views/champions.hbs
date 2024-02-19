@@ -1,0 +1,43 @@
+{{!--
+Citation for the following file:
+Date: 2/18/2024
+Based on:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
+--}}
+<h1>League of Legends Stats Tracker</h1>
+[<a href="/">Home</a> | <a href="champions">Champions</a> | <a href="matches">Matches</a> | <a href="playerMatches">Player Matches</a> | 
+<a href="players">Players</a> | <a href="ranks">Ranks</a> | <a href="results">Results</a> | <a href="roles">Roles</a>
+| <a href="teams">Teams</a> ]
+
+<div id="browse" style="display: block">
+    {{!-- Create a table --}}
+    <h2>Browse Champions</h2>
+    <table border="1" cellpadding="5">
+
+        {{!-- Header section --}}
+        <thead>
+
+            {{!-- For just the first row, we print each key of the row object as a header cell so we
+            know what each column means when the page renders --}}
+            <tr>
+                {{#each data.[0]}}
+                <th>
+                    {{@key}}
+                </th>
+                {{/each}}
+            </tr>
+        </thead>
+
+        {{!-- Body section --}}
+        <tbody>
+
+            {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
+            {{#each data}}
+            <tr>
+                <td>{{this.championID}}</td>
+                <td>{{this.championName}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>

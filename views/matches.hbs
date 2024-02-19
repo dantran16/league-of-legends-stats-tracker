@@ -1,0 +1,97 @@
+<h1>Matches</h1>
+[<a href="/">Home</a> | <a href="champions">Champions</a> | <a href="matches">Matches</a> | <a href="playerMatches">Player Matches</a> | 
+<a href="players">Players</a> | <a href="ranks">Ranks</a> | <a href="results">Results</a> | <a href="roles">Roles</a>
+| <a href="teams">Teams</a> ]
+
+<div id="browse" style="display: block">
+    {{!-- Create a table --}}
+    <table border="1" cellpadding="5">
+
+        {{!-- Header section --}}
+        <thead>
+
+            {{!-- For just the first row, we print each key of the row object as a header cell so we
+            know what each column means when the page renders --}}
+            <tr>
+                <th><a href="#">New</a></th>
+                <th></th>
+                {{#each data.[0]}}
+                <th>
+                    {{@key}}
+                </th>
+                {{/each}}
+                <th>playerStatistics</th>
+            </tr>
+        </thead>
+
+        {{!-- Body section --}}
+        <tbody>
+
+            {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
+            {{#each data}}
+            <tr>
+                <td><a href="#">Edit</a></td>
+                <td><a href="#">Delete</a></td>
+                <td>{{this.matchID}}</td>
+                <td>{{this.winningTeamName}}</td>
+                <td>{{this.matchDate}}</td>
+                <td>{{this.redScore}}</td>
+                <td>{{this.blueScore}}</td>
+                <td>{{this.matchDurationInHours}}</td>
+                <td><a href="/playerMatches">Stats</a></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+<div id="insert" style="display: block">
+    <form id="addMatch">
+        <legend><strong>Add Match</strong></legend>
+          <fieldset class="fields">
+            Winning Team
+            <input type="radio" name="winningTeamID" value="1">
+            <label>Red Team</label>
+            <input type="radio" name="winningTeamID" value="2">
+            <label>Blue Team</label><br>
+            <label> Match Date </label> <input type="text" name="matchDate"><br>
+            <label> Red Score </label> <input type="number" name="redScore"><br>
+            <label> Blue Score </label> <input type="number" name="blueScore"><br>
+            <label> Match Duration (in hrs) </label> <input type="number" name="matchDurationInHours">
+          </fieldset>
+          <input class="btn" type="submit" id="addMatch" value="Add a Match">
+          <input class="btn" type="button" value="cancel">
+	</form> <!--add new match-->
+</div><!-- insert -->
+
+<div id="update" style="display: block">
+  <form id="updateMatch">
+      <legend><strong>Update Match</strong></legend>
+          <fieldset class="fields">
+          <label> Match ID:</label> 1<br>
+          Winning Team
+          <input type="radio" name="winningTeamID" value="1" checked="">
+            <label>Red Team</label>
+            <input type="radio" name="winningTeamID" value="2">
+            <label>Blue Team</label><br>
+          <label> Match Date </label> <input type="text" name="matchDate" value="2013-02-05"><br>
+          <label> Red Score </label> <input type="number" name="redScore" value="33"><br>
+          <label> Blue Score </label> <input type="number" name="blueScore" value="14"><br>
+          <label> Match Duration (in hrs) </label> <input type="number" name="matchDurationInHours" value="0.437">
+    </fieldset>
+    <input class="btn" type="submit" id="UpdateSaveMatch" value="Save Update Match">
+          <input class="btn" type="button" value="cancel">
+  </form> 
+</div><!-- update -->
+
+<div id="delete" style="display: block">
+  <form id="deleteMatch">
+      <legend><strong>Delete Match</strong></legend>
+          <fieldset class="fields">
+          <p>Are you sure you wish to delete the following?</p>
+          <label>Match ID:</label> 1
+    </fieldset>
+    <input class="btn" type="submit" id="DeleteMatch" value="Delete Match">
+          <input class="btn" type="button" value="cancel">
+  </form> 
+</div><!-- delete -->
