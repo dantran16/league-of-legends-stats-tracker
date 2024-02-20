@@ -1,0 +1,119 @@
+<h1>Player Matches</h1>
+[ <a href="/">Home</a> ]<br>
+[ <a href="champions">Champions</a> | <a href="ranks">Ranks</a> | <a href="results">Results</a> | <a href="roles">Roles</a> | <a href="teams">Teams</a> ]<br>
+[ <a href="matches">Matches</a> | <a href="playerMatches">PlayerMatches</a> | <a href="players">Players</a> ]
+
+<div id="browse" style="display: block">
+    {{!-- Create a table --}}
+    <table border="1" cellpadding="5">
+
+        {{!-- Header section --}}
+        <thead>
+
+            {{!-- For just the first row, we print each key of the row object as a header cell so we
+            know what each column means when the page renders --}}
+            <tr>
+                <th><a href="#">New</a></th>
+                <th></th>
+                {{#each data.[0]}}
+                <th>
+                    {{@key}}
+                </th>
+                {{/each}}
+            </tr>
+        </thead>
+
+        {{!-- Body section --}}
+        <tbody>
+
+            {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
+            {{#each data}}
+            <tr>
+                <td><a href="#">Edit</a></td>
+                <td><a href="#">Delete</a></td>
+                <td>{{this.playerMatchID}}</td>
+                <td>{{this.matchID}}</td>
+                <td>{{this.player}}</td>
+                <td>{{this.role}}</td>
+                <td>{{this.result}}</td>
+                <td>{{this.champion}}</td>
+                <td>{{this.kills}}</td>
+                <td>{{this.deaths}}</td>
+                <td>{{this.assists}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+<div id="insert" style="display: block">
+    <form id="addPlayerMatch">
+        <legend><strong>Add PlayerMatch</strong></legend>
+          <fieldset class="fields">
+            <label> Match ID </label> <input type="text" name="matchID"><br>
+            <label> Player Name </label> <input type="text" name="playerID"><br>
+            <label>Role Name</label>
+            <select name="roleID">
+              <option value="1">Top</option>
+              <option value="2">Jungler</option>
+              <option value="3">Middle</option>
+              <option value="4">Bottom</option>
+              <option value="4">Support</option>
+            </select><br>
+            Result Name
+            <input type="radio" name="resultID" value="1">
+            <label>Win</label>
+            <input type="radio" name="resultID" value="2">
+            <label>Loss</label><br>
+            <label> Champion Name </label> <input type="text" name="championID"><br>
+            <label> Kill Count </label> <input type="number" name="killCount"><br>
+            <label> Death Count </label> <input type="number" name="deathCount"><br>
+            <label> Assist Count </label> <input type="number" name="assistCount">
+          </fieldset>
+          <input class="btn" type="submit" id="addPlayerMatch" value="Add a PlayerMatch">
+          <input class="btn" type="button" value="cancel">
+	</form> <!--add new playerMatch-->
+</div><!-- insert -->
+
+
+<div id="update" style="display: block">
+  <form id="updatePlayerMatch">
+      <legend><strong>Update PlayerMatch</strong></legend>
+          <fieldset class="fields">
+          <label> Match ID: </label> <input type="text" name="matchID"><br>
+          <label> Player Name: </label> <input type="text" name="matchID"><br>
+          <label> Role Name </label>
+            <select name="roleID">
+              <option value="1">Top</option>
+              <option value="2">Jungler</option>
+              <option value="3">Middle</option>
+              <option value="4">Bottom</option>
+              <option value="4">Support</option>
+            </select><br>
+            Result Name
+            <input type="radio" name="resultID" value="1">
+            <label>Win</label>
+            <input type="radio" name="resultID" value="2">
+            <label>Loss</label><br>
+          <label> Champion Name </label> <input type="text" name="championID" value="Garen"><br>
+          <label> Kill Count </label> <input type="number" name="killCount" value="9"><br>
+          <label> Death Count </label> <input type="number" name="deathCount" value="3"><br>
+          <label> Assist Count </label> <input type="number" name="assistCount" value="2">
+    </fieldset>
+    <input class="btn" type="submit" id="UpdateSavePlayerMatch" value="Save Update PlayerMatch">
+          <input class="btn" type="button" value="cancel" >
+  </form> 
+</div><!-- update -->
+
+
+<div id="delete" style="display: block">
+  <form id="deletePlayerMatch">
+      <legend><strong>Delete PlayerMatch</strong></legend>
+          <fieldset class="fields">
+          <p>Are you sure you wish to delete the following?</p>
+          <label>Player Match ID:</label> <input type="number" name="matchID">
+    </fieldset>
+    <input class="btn" type="submit" id="DeletePlayerMatch" value="Delete PlayerMatch">
+          <input class="btn" type="button" value="cancel" >
+  </form> 
+</div><!-- delete -->

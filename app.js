@@ -48,7 +48,13 @@ app.get('/matches', function(req, res){
 
 app.get('/playerMatches', function(req, res){
     {
-        let query1 = "SELECT * FROM PlayerMatches;"
+        let query1 = `SELECT  playerMatchID, Matches.matchID AS matchID, Players.playerName AS player, Roles.roleName AS role, Results.resultName AS result, Champions.championName AS champion, 
+        killCount AS kills, deathCount AS deaths, assistCount AS assists FROM PlayerMatches
+        INNER JOIN Players ON PlayerMatches.playerID = Players.playerID 
+        INNER JOIN Matches ON PlayerMatches.matchID = Matches.matchID
+        INNER JOIN Roles ON PlayerMatches.roleID = Roles.roleID
+        INNER JOIN Results ON PlayerMatches.resultID = Results.resultID
+        INNER JOIN Champions ON PlayerMatches.championID = Champions.championID`
         
         db.pool.query(query1, function(error, rows, fields){
             res.render('playermatches', {data: rows})

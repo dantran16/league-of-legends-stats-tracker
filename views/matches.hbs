@@ -1,7 +1,7 @@
 <h1>Matches</h1>
-[<a href="/">Home</a> | <a href="champions">Champions</a> | <a href="matches">Matches</a> | <a href="playerMatches">Player Matches</a> | 
-<a href="players">Players</a> | <a href="ranks">Ranks</a> | <a href="results">Results</a> | <a href="roles">Roles</a>
-| <a href="teams">Teams</a> ]
+[ <a href="/">Home</a> ]<br>
+[ <a href="champions">Champions</a> | <a href="ranks">Ranks</a> | <a href="results">Results</a> | <a href="roles">Roles</a> | <a href="teams">Teams</a> ]<br>
+[ <a href="matches">Matches</a> | <a href="playerMatches">PlayerMatches</a> | <a href="players">Players</a> ]
 
 <div id="browse" style="display: block">
     {{!-- Create a table --}}
@@ -20,7 +20,7 @@
                     {{@key}}
                 </th>
                 {{/each}}
-                <th>playerStatistics</th>
+                <th>matchStatistics</th>
             </tr>
         </thead>
 
@@ -54,10 +54,10 @@
             <label>Red Team</label>
             <input type="radio" name="winningTeamID" value="2">
             <label>Blue Team</label><br>
-            <label> Match Date </label> <input type="text" name="matchDate"><br>
+            <label> Match Date </label> <input type="text" name="matchDate" placeholder="YYYY-MM-DD"><br>
             <label> Red Score </label> <input type="number" name="redScore"><br>
             <label> Blue Score </label> <input type="number" name="blueScore"><br>
-            <label> Match Duration (in hrs) </label> <input type="number" name="matchDurationInHours">
+            <label> Match Duration (hrs) </label> <input type="number" name="matchDurationInHours">
           </fieldset>
           <input class="btn" type="submit" id="addMatch" value="Add a Match">
           <input class="btn" type="button" value="cancel">
@@ -77,7 +77,7 @@
           <label> Match Date </label> <input type="text" name="matchDate" value="2013-02-05"><br>
           <label> Red Score </label> <input type="number" name="redScore" value="33"><br>
           <label> Blue Score </label> <input type="number" name="blueScore" value="14"><br>
-          <label> Match Duration (in hrs) </label> <input type="number" name="matchDurationInHours" value="0.437">
+          <label> Match Duration (hrs) </label> <input type="number" name="matchDurationInHours" value="0.437">
     </fieldset>
     <input class="btn" type="submit" id="UpdateSaveMatch" value="Save Update Match">
           <input class="btn" type="button" value="cancel">

@@ -7,10 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },
-  "author": "George Kochera",
+  "author": "Dan Tran and Ngoc-Thao Ly",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "express-handlebars": "^7.1.2",
     "mysql": "^2.18.1"
   }

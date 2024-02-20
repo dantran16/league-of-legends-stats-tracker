@@ -1,7 +1,7 @@
 <h1>League of Legends Stats Tracker</h1>
-[<a href="/">Home</a> | <a href="champions">Champions</a> | <a href="matches">Matches</a> | <a href="playerMatches">Player Matches</a> | 
-<a href="players">Players</a> | <a href="ranks">Ranks</a> | <a href="results">Results</a> | <a href="roles">Roles</a>
-| <a href="teams">Teams</a> ]
+[ <a href="/">Home</a> ]<br>
+[ <a href="champions">Champions</a> | <a href="ranks">Ranks</a> | <a href="results">Results</a> | <a href="roles">Roles</a> | <a href="teams">Teams</a> ]<br>
+[ <a href="matches">Matches</a> | <a href="playerMatches">PlayerMatches</a> | <a href="players">Players</a> ]
 
 <div id="browse" style="display: block">
     {{!-- Create a table --}}
@@ -35,3 +35,14 @@
         </tbody>
     </table>
 </div>
+
+<div id="insert" style="display: block">
+    <form id="addResult">
+        <legend><strong>Add Result</strong></legend>
+          <fieldset class="fields">
+            <label> Result Name </label> <input type="text" name="resultName">
+          </fieldset>
+          <input class="btn" type="submit" id="addResult" value="Add a Result">
+          <input class="btn" type="button" value="cancel">
+	</form> <!--add new result-->
+</div><!-- insert -->
