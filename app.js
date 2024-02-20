@@ -57,7 +57,7 @@ app.get('/playerMatches', function(req, res){
         INNER JOIN Champions ON PlayerMatches.championID = Champions.championID`
         
         db.pool.query(query1, function(error, rows, fields){
-            res.render('playermatches', {data: rows})
+            res.render('playerMatches', {data: rows})
         })
     }
 })
