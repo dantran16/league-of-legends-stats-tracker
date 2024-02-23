@@ -1,9 +1,5 @@
-<h1>Player Matches</h1>
-[ <a href="/">Home</a> ]<br>
-[ <a href="champions">Champions</a> | <a href="ranks">Ranks</a> | <a href="results">Results</a> | <a href="roles">Roles</a> | <a href="teams">Teams</a> ]<br>
-[ <a href="matches">Matches</a> | <a href="playerMatches">PlayerMatches</a> | <a href="players">Players</a> ]
-
 <div id="browse" style="display: block">
+  <h2>Browse Player Matches</h2>
     {{!-- Create a table --}}
     <table border="1" cellpadding="5">
 
@@ -48,7 +44,7 @@
 
 <div id="insert" style="display: block">
     <form id="addPlayerMatch">
-        <legend><strong>Add PlayerMatch</strong></legend>
+        <legend><h3>Add PlayerMatch</h3></legend>
           <fieldset class="fields">
             <label> Match ID </label> <input type="text" name="matchID"><br>
             <label> Player Name </label> <input type="text" name="playerID"><br>
@@ -78,10 +74,10 @@
 
 <div id="update" style="display: block">
   <form id="updatePlayerMatch">
-      <legend><strong>Update PlayerMatch</strong></legend>
+      <legend><h3>Update PlayerMatch</h3></legend>
           <fieldset class="fields">
-          <label> Match ID: </label> <input type="text" name="matchID"><br>
-          <label> Player Name: </label> <input type="text" name="matchID"><br>
+          <label> Match ID </label> <input type="text" name="matchID"><br>
+          <label> Player Name </label> <input type="text" name="matchID"><br>
           <label> Role Name </label>
             <select name="roleID">
               <option value="1">Top</option>
@@ -90,7 +86,7 @@
               <option value="4">Bottom</option>
               <option value="4">Support</option>
             </select><br>
-            Result Name
+            <label> Result Name </label>
             <input type="radio" name="resultID" value="1">
             <label>Win</label>
             <input type="radio" name="resultID" value="2">
@@ -108,10 +104,10 @@
 
 <div id="delete" style="display: block">
   <form id="deletePlayerMatch">
-      <legend><strong>Delete PlayerMatch</strong></legend>
+      <legend><h3>Delete PlayerMatch</h3></legend>
           <fieldset class="fields">
           <p>Are you sure you wish to delete the following?</p>
-          <label>Player Match ID:</label> <input type="number" name="matchID">
+          <label> Player Match ID </label> <input type="number" name="matchID">
     </fieldset>
     <input class="btn" type="submit" id="DeletePlayerMatch" value="Delete PlayerMatch">
           <input class="btn" type="button" value="cancel" >
