@@ -1,9 +1,5 @@
-<h1>Matches</h1>
-[ <a href="/">Home</a> ]<br>
-[ <a href="champions">Champions</a> | <a href="ranks">Ranks</a> | <a href="results">Results</a> | <a href="roles">Roles</a> | <a href="teams">Teams</a> ]<br>
-[ <a href="matches">Matches</a> | <a href="playerMatches">PlayerMatches</a> | <a href="players">Players</a> ]
-
 <div id="browse" style="display: block">
+    <h2>Browse Matches</h2>
     {{!-- Create a table --}}
     <table border="1" cellpadding="5">
 
@@ -47,9 +43,9 @@
 
 <div id="insert" style="display: block">
     <form id="addMatch">
-        <legend><strong>Add Match</strong></legend>
+        <legend><h3>Add Match</h3></legend>
           <fieldset class="fields">
-            Winning Team
+            <label> Winning Team </label>
             <input type="radio" name="winningTeamID" value="1">
             <label>Red Team</label>
             <input type="radio" name="winningTeamID" value="2">
@@ -66,10 +62,10 @@
 
 <div id="update" style="display: block">
   <form id="updateMatch">
-      <legend><strong>Update Match</strong></legend>
+      <legend><h3>Update Match</h3></legend>
           <fieldset class="fields">
-          <label> Match ID:</label> 1<br>
-          Winning Team
+          <label> Match ID </label> 1<br>
+          <label> Winning Team </label>
           <input type="radio" name="winningTeamID" value="1" checked="">
             <label>Red Team</label>
             <input type="radio" name="winningTeamID" value="2">
@@ -86,11 +82,11 @@
 
 <div id="delete" style="display: block">
   <form id="deleteMatch">
-      <legend><strong>Delete Match</strong></legend>
+      <legend><h3>Delete Match</h3></legend>
           <fieldset class="fields">
           <p>Are you sure you wish to delete the following?</p>
-          <label>Match ID:</label> 1
-    </fieldset>
+          <label> Match ID </label> 1
+          </fieldset>
     <input class="btn" type="submit" id="DeleteMatch" value="Delete Match">
           <input class="btn" type="button" value="cancel">
   </form> 

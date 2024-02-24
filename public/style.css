@@ -1,0 +1,127 @@
+/* font settings */
+
+@font-face {
+	font-family: Beaufort;
+	src: url("/assets/BeaufortforLOL-Regular.ttf") format("truetype");
+}
+@font-face {
+	font-family: Beaufort;
+	font-weight: bold;
+	src: url("/assets/BeaufortforLOL-Bold.ttf") format("truetype");
+}
+@font-face {
+	font-family: Spiegel;
+	src: url("/assets/Spiegel_TT_Regular.ttf") format("truetype");
+}
+
+* { font-family: Spiegel; }
+
+/* Sticky Border settings */
+
+#top, #bottom, #left, #right {
+	background: #091428;
+	position: fixed;
+}
+
+#top, #bottom {
+	left: 0;
+	right: 0;
+}
+
+#top {
+	height: 100px;
+	top: 0;
+}
+
+#bottom {
+	bottom: 0;
+	height: 30px;
+}
+
+#left, #right {
+	bottom: 0;
+	top: 0;
+	width: 30px;
+}
+
+#left { left: 0; }
+
+#right { right: 0; }
+
+/* id settings */
+
+#header { width: 100%; }
+
+#title {
+	column-width: 30%;
+	padding-left: 30px;
+	text-align: left;
+}
+
+#toc {
+	color: white;
+	font-size: 20px;
+	text-align: center;
+}
+
+#top-heading {
+	position: fixed;
+	width: 100%;
+}
+
+/* Class settings */
+
+.contents {
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 100px;
+	text-align: center;
+	width: 50%;
+}
+
+/* Settings */
+
+a {
+	color: #0AC8B9;
+	text-decoration: none;
+}
+
+a:hover { color: #785A28; }
+
+body {
+	background-image: url("/assets/background.png");
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: auto 100%;
+	min-height: 1500px;
+}
+
+fieldset {
+	background: rgba(255,255,255,0.5);
+	border: solid #091428;
+	margin: 20px auto;
+	min-height: 30px;
+	padding-bottom: 20px;
+	padding-top: 20px;
+	text-align: center;
+	width: 775px;
+}
+
+h1 {
+	color: #C89B3C;
+	font-weight: bold;
+}
+
+h1, h2, h3, h4, h5, h6 { font-family: Beaufort; }
+
+input { width: 150px; }
+
+p, label { margin-top: 0; }
+
+table {
+	background: rgba(9,20,40,0.9);
+	color: white;
+	margin-left: auto;
+	margin-right: auto;
+	min-width: 800px;
+}

@@ -10,11 +10,27 @@ Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/St
 <!DOCTYPE html>
 <html>
 <head>
+    <div id="left"></div>
+    <div id="right"></div>
+    <div id="top"></div>
+    <div id="bottom"></div>
+    <div id="top-heading">
     <meta charset="utf-8">
-    <title>Example App</title>
+    <table id="header">
+        <th id="title">
+             <a href="/"><h1>League of Legends Stats Tracker</h1></a><br>
+        </th>
+        <th id="toc">
+            [ <a href="champions">Champions</a> | <a href="ranks">Ranks</a> | <a href="results">Results</a> | <a href="roles">Roles</a> | <a href="teams">Teams</a> ] 
+            [ <a href="matches">Matches</a> | <a href="playerMatches">PlayerMatches</a> | <a href="players">Players</a> ]
+        </th>
+    </table>
+    <link href="style.css" rel="stylesheet"/>
+    </div>
 </head>
 <body>
+    <div class="contents">
     {{{body}}}
-
+    </div>
 </body>
 </html>

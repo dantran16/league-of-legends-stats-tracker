@@ -1,9 +1,5 @@
-<h1>Matches</h1>
-[ <a href="/">Home</a> ]<br>
-[ <a href="champions">Champions</a> | <a href="ranks">Ranks</a> | <a href="results">Results</a> | <a href="roles">Roles</a> | <a href="teams">Teams</a> ]<br>
-[ <a href="matches">Matches</a> | <a href="playerMatches">PlayerMatches</a> | <a href="players">Players</a> ]
-
 <div id="browse" style="display: block">
+  <h2>Browse Players</h2>
     {{!-- Create a table --}}
     <table border="1" cellpadding="5">
 
@@ -47,9 +43,9 @@
 
 <div id="insert" style="display: block">
     <form id="addPlayer">
-        <legend><strong>Add Player</strong></legend>
+        <legend><h3>Add Player</h3></legend>
           <fieldset class="fields">
-            <label>Rank Name</label>
+            <label> Rank Name </label>
             <select name="rankID">
               <option value="1">Unranked</option>
               <option value="2">Bronze</option>
@@ -65,10 +61,10 @@
 
 <div id="update" style="display: block">
   <form id="updatePlayer">
-      <legend><strong>Update Player</strong></legend>
+      <legend><h3>Update Player</h3></legend>
           <fieldset class="fields">
-          <label>Player ID:</label> 1<br>
-          <label>Rank Name</label>
+          <label> Player ID </label> 1<br>
+          <label> Rank Name </label>
             <select name="rankID">
               <option value="1">Unranked</option>
               <option value="2">Bronze</option>
@@ -84,11 +80,11 @@
 
 <div id="delete" style="display: block">
   <form id="deletePlayer">
-      <legend><strong>Delete Player</strong></legend>
+      <legend><h3>Delete Player</h3></legend>
           <fieldset class="fields">
           <p>Are you sure you wish to delete the following?</p>
-          <label>Player ID:</label> 1<br>
-            <label> Player Name: </label> V1negerBottle
+          <label> Player ID </label> 1<br>
+            <label> Player Name </label> V1negerBottle
     </fieldset>
     <input class="btn" type="submit" id="DeletePlayer" value="Delete Player">
           <input class="btn" type="button" value="cancel">
