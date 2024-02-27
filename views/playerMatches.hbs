@@ -1,3 +1,10 @@
+<!-- 
+Citation for the following file:
+Date: 2/11/2024
+Based on:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%203%20-%20Integrating%20a%20Templating%20Engine%20(Handlebars)
+-->
+
 <div id="browse" style="display: block">
   <h2>Browse Player Matches</h2>
     {{!-- Create a table --}}
@@ -9,7 +16,7 @@
             {{!-- For just the first row, we print each key of the row object as a header cell so we
             know what each column means when the page renders --}}
             <tr>
-                <th><a href="#">New</a></th>
+                <th><a href="/playerMatches/new">New</a></th>
                 <th></th>
                 {{#each data.[0]}}
                 <th>
@@ -25,8 +32,8 @@
             {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
             {{#each data}}
             <tr>
-                <td><a href="#">Edit</a></td>
-                <td><a href="#">Delete</a></td>
+                <td><a href='/playerMatches/{{this.playerMatchID}}/edit'>Edit</a></td>
+                <td><a href="/playerMatches/{{this.playerMatchID}}/delete">Delete</a></td>
                 <td>{{this.playerMatchID}}</td>
                 <td>{{this.matchID}}</td>
                 <td>{{this.player}}</td>
@@ -41,75 +48,3 @@
         </tbody>
     </table>
 </div>
-
-<div id="insert" style="display: block">
-    <form id="addPlayerMatch">
-        <legend><h3>Add PlayerMatch</h3></legend>
-          <fieldset class="fields">
-            <label> Match ID </label> <input type="text" name="matchID"><br>
-            <label> Player Name </label> <input type="text" name="playerID"><br>
-            <label>Role Name</label>
-            <select name="roleID">
-              <option value="1">Top</option>
-              <option value="2">Jungler</option>
-              <option value="3">Middle</option>
-              <option value="4">Bottom</option>
-              <option value="4">Support</option>
-            </select><br>
-            Result Name
-            <input type="radio" name="resultID" value="1">
-            <label>Win</label>
-            <input type="radio" name="resultID" value="2">
-            <label>Loss</label><br>
-            <label> Champion Name </label> <input type="text" name="championID"><br>
-            <label> Kill Count </label> <input type="number" name="killCount"><br>
-            <label> Death Count </label> <input type="number" name="deathCount"><br>
-            <label> Assist Count </label> <input type="number" name="assistCount">
-          </fieldset>
-          <input class="btn" type="submit" id="addPlayerMatch" value="Add a PlayerMatch">
-          <input class="btn" type="button" value="cancel">
-	</form> <!--add new playerMatch-->
-</div><!-- insert -->
-
-
-<div id="update" style="display: block">
-  <form id="updatePlayerMatch">
-      <legend><h3>Update PlayerMatch</h3></legend>
-          <fieldset class="fields">
-          <label> Match ID </label> <input type="text" name="matchID"><br>
-          <label> Player Name </label> <input type="text" name="matchID"><br>
-          <label> Role Name </label>
-            <select name="roleID">
-              <option value="1">Top</option>
-              <option value="2">Jungler</option>
-              <option value="3">Middle</option>
-              <option value="4">Bottom</option>
-              <option value="4">Support</option>
-            </select><br>
-            <label> Result Name </label>
-            <input type="radio" name="resultID" value="1">
-            <label>Win</label>
-            <input type="radio" name="resultID" value="2">
-            <label>Loss</label><br>
-          <label> Champion Name </label> <input type="text" name="championID" value="Garen"><br>
-          <label> Kill Count </label> <input type="number" name="killCount" value="9"><br>
-          <label> Death Count </label> <input type="number" name="deathCount" value="3"><br>
-          <label> Assist Count </label> <input type="number" name="assistCount" value="2">
-    </fieldset>
-    <input class="btn" type="submit" id="UpdateSavePlayerMatch" value="Save Update PlayerMatch">
-          <input class="btn" type="button" value="cancel" >
-  </form> 
-</div><!-- update -->
-
-
-<div id="delete" style="display: block">
-  <form id="deletePlayerMatch">
-      <legend><h3>Delete PlayerMatch</h3></legend>
-          <fieldset class="fields">
-          <p>Are you sure you wish to delete the following?</p>
-          <label> Player Match ID </label> <input type="number" name="matchID">
-    </fieldset>
-    <input class="btn" type="submit" id="DeletePlayerMatch" value="Delete PlayerMatch">
-          <input class="btn" type="button" value="cancel" >
-  </form> 
-</div><!-- delete -->
