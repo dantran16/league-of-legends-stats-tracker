@@ -46,8 +46,6 @@ a {
 
 a:hover { color: #785A28; }
 
-
-
 table {
 	background: rgba(9,20,40,0.9);
 	color: white;
@@ -67,6 +65,7 @@ th,td{
 	align-items: center;
 	padding: 2rem;
 	background: rgba(9,20,40,0.9);
+	border-radius: 10px;
 	margin: 0;
 }
 
@@ -119,59 +118,53 @@ th,td{
 }
 
 /* Form Settings */
-.insert{
+.insert, .update, .delete, #about {
 	width: 100%;
 	background: rgba(255,255,255,0.5);
-	border: solid #091428;
+	border: solid white;
 	padding: .5rem 2rem;
-	display: flex;
-	flex-direction: column;
-}
-
-.update{
-	width: 100%;
-	background: rgba(255,255,255,0.5);
-	border: solid #091428;
-	padding: .5rem 2rem;
-	display: flex;
-	flex-direction: column;
-}
-
-.delete{
-	width: 100%;
-	background: rgba(255,255,255,0.5);
-	border: solid #091428;
-	padding: .5rem 2rem;
+	margin: 2rem auto;
 	display: flex;
 	flex-direction: column;
 }
 
 .fields {
+	border-style: solid;
+	border-color: rgba(9,20,40,0.9);
 	text-align: left;
 	display: flex;
 	flex-direction: column;
 	gap: .5rem;
+	border-width: thin;
 }
 
-.field input, select{
+.field input, select {
 	font-size: 18px;
 	width: 100%;
 	padding: .5rem .5rem;
 	margin-top: .25rem;
 }
 
-.btn{
+.btn {
+	font-family: Spiegel;
+	background: rgba(255,255,255,0.8);
 	width: 100%;
+	border: none;
+	border-radius: 10px;
 }
 
-input{
+.btn:active {
+	background: rgba(255,255,255,0.3);
+}
+
+input {
 	font-size: 18px;
 	margin: .5rem 0;
 
 }
 
 /* SQL Error Message */
-.error{
+.error {
 	width: 100%;
 	background: rgba(255,255,255,0.5);
 	border: solid #091428;
@@ -181,7 +174,10 @@ input{
 	font-size: 20px;
 }
 
-.error div{
+.error div {
 	margin-bottom: 1rem;
 }
 
+#about {
+	border-color: rgba(9,20,40,0.9);
+}
