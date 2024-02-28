@@ -5,7 +5,7 @@ Based on:
 Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%203%20-%20Integrating%20a%20Templating%20Engine%20(Handlebars)
 -->
 
-<div id="browse" style="display: block">
+<div class="browse" style="display: block">
   <h2>Browse Players</h2>
     {{!-- Create a table --}}
     <table border="1" cellpadding="5">
@@ -48,7 +48,7 @@ Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/St
     </table>
 </div>
 
-<div id="insert" style="display: block">
+<div class="insert" style="display: block">
     <form id="addPlayer">
         <legend><h3>Add Player</h3></legend>
           <fieldset class="fields">
@@ -61,12 +61,12 @@ Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/St
             </select><br>
             <label> Player Name </label> <input type="text" name="playerName">
           </fieldset>
-          <input class="btn" type="submit" id="addPlayer" value="Add a Player">
-          <input class="btn" type="button" value="cancel">
+          <input class="btn" type="submit" id="addPlayer" value="Add Player">
+          <input class="btn" type="button" value="Cancel">
 	</form> <!--add new player-->
 </div><!-- insert -->
 
-<div id="update" style="display: block">
+<div class="update" style="display: block">
   <form id="updatePlayer">
       <legend><h3>Update Player</h3></legend>
           <fieldset class="fields">
@@ -80,12 +80,12 @@ Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/St
             </select><br>
           <label> Player Name </label> <input type="text" name="playerName" value="V1negarBottle">
     </fieldset>
-    <input class="btn" type="submit" id="UpdateSavePlayer" value="Save Update Player">
-          <input class="btn" type="button" value="cancel">
+    <input class="btn" type="submit" id="UpdateSavePlayer" value="Update Player">
+          <input class="btn" type="button" value="Cancel">
   </form> 
 </div><!-- update -->
 
-<div id="delete" style="display: block">
+<div class="delete" style="display: block">
   <form id="deletePlayer">
       <legend><h3>Delete Player</h3></legend>
           <fieldset class="fields">
@@ -94,6 +94,6 @@ Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/St
             <label> Player Name </label> V1negerBottle
     </fieldset>
     <input class="btn" type="submit" id="DeletePlayer" value="Delete Player">
-          <input class="btn" type="button" value="cancel">
+          <input class="btn" type="button" value="Cancel">
   </form> 
 </div><!-- delete -->
