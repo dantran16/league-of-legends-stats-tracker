@@ -1,4 +1,4 @@
-<div id="browse" style="display: block">
+<div class="browse" style="display: block">
     <h2>Browse Matches</h2>
     {{!-- Create a table --}}
     <table border="1" cellpadding="5">
@@ -41,46 +41,42 @@
     </table>
 </div>
 
-<div id="insert" style="display: block">
+<div class="insert" style="display: block">
     <form id="addMatch">
         <legend><h3>Add Match</h3></legend>
           <fieldset class="fields">
             <label> Winning Team </label>
-            <input type="radio" name="winningTeamID" value="1">
-            <label>Red Team</label>
-            <input type="radio" name="winningTeamID" value="2">
-            <label>Blue Team</label><br>
+            <label><input type="radio" name="winningTeamID" value="1"> Red Team</label>
+            <label><input type="radio" name="winningTeamID" value="2"> Blue Team</label><br>
             <label> Match Date </label> <input type="text" name="matchDate" placeholder="YYYY-MM-DD"><br>
             <label> Red Score </label> <input type="number" name="redScore"><br>
             <label> Blue Score </label> <input type="number" name="blueScore"><br>
             <label> Match Duration (hrs) </label> <input type="number" name="matchDurationInHours">
           </fieldset>
-          <input class="btn" type="submit" id="addMatch" value="Add a Match">
-          <input class="btn" type="button" value="cancel">
+          <input class="btn" type="submit" id="addMatch" value="Add Match">
+          <input class="btn" type="button" value="Cancel">
 	</form> <!--add new match-->
 </div><!-- insert -->
 
-<div id="update" style="display: block">
+<div class="update" style="display: block">
   <form id="updateMatch">
       <legend><h3>Update Match</h3></legend>
           <fieldset class="fields">
-          <label> Match ID </label> 1<br>
+          <label> Match ID </label> 1<br><br>
           <label> Winning Team </label>
-          <input type="radio" name="winningTeamID" value="1" checked="">
-            <label>Red Team</label>
-            <input type="radio" name="winningTeamID" value="2">
-            <label>Blue Team</label><br>
+          <label><input type="radio" name="winningTeamID" value="1"> Red Team</label>
+            <label><input type="radio" name="winningTeamID" value="2"> Blue Team</label><br>
           <label> Match Date </label> <input type="text" name="matchDate" value="2013-02-05"><br>
           <label> Red Score </label> <input type="number" name="redScore" value="33"><br>
           <label> Blue Score </label> <input type="number" name="blueScore" value="14"><br>
           <label> Match Duration (hrs) </label> <input type="number" name="matchDurationInHours" value="0.437">
     </fieldset>
-    <input class="btn" type="submit" id="UpdateSaveMatch" value="Save Update Match">
-          <input class="btn" type="button" value="cancel">
+    <input class="btn" type="submit" id="UpdateSaveMatch" value="Update Match">
+          <input class="btn" type="button" value="Cancel">
   </form> 
 </div><!-- update -->
 
-<div id="delete" style="display: block">
+<div class="delete" style="display: block">
   <form id="deleteMatch">
       <legend><h3>Delete Match</h3></legend>
           <fieldset class="fields">
@@ -88,6 +84,6 @@
           <label> Match ID </label> 1
           </fieldset>
     <input class="btn" type="submit" id="DeleteMatch" value="Delete Match">
-          <input class="btn" type="button" value="cancel">
+          <input class="btn" type="button" value="Cancel">
   </form> 
 </div><!-- delete -->
