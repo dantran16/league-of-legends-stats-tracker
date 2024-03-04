@@ -56,6 +56,7 @@ app.get('/matches', function(req, res){
     }
 })
 
+// Player Matches Section
 app.get('/playerMatches', function(req, res){
     {
         let query1 = `SELECT  playerMatchID, Matches.matchID, Players.playerName AS player, Roles.roleName AS role, Results.resultName AS result, Champions.championName AS champion, 
@@ -196,6 +197,97 @@ app.get('/players', function(req, res){
         
         db.pool.query(query1, function(error, rows, fields){
             res.render('players', {data: rows})
+        })
+    }
+})
+
+app.get('/players/new', function(req, res){
+    {
+        let query1 = `SELECT rankID, rankName FROM Ranks`
+        // Query for Ranks
+        db.pool.query(query1, function(rankError, rankRows, rankFields){
+            res.render('newPlayer', { ranks: rankRows } )
+        })
+    }
+})
+
+app.post('/players/new', function(req,res){
+    {
+        const { rankID, playerName } = req.body;
+        let query1 = `INSERT INTO Players (rankID, playerName, matchCount, winCount, hoursPlayed) VALUES (${rankID},'${playerName}',0,0,0)`
+        let errMessage = "You have failed to insert successfully!"
+        let operation = 'inserted'
+        db.pool.query(query1, function(error, rows, fields){
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
+            else res.render('success', {operation, successes: rows.affectedRows})
+        })
+    }
+})
+
+app.get('/players/:playerID/edit', function(req,res){
+    {
+        const { playerID } = req.params
+        let query1 = `SELECT rankID, rankName FROM Ranks ORDER BY rankID`
+        let query2 =  `SELECT playerID, rankID, playerName FROM Players WHERE playerID = ${playerID}`
+        // Query for ranks
+        db.pool.query(query1, function(rankError, rankRows, rankFields){
+            // Query for players
+            db.pool.query(query2, function(playerError, playerRows, playerFields){
+                // Make sure to make the dropdown default consistent with data
+                rankRows.forEach(rank => {
+                    rank.selected = rankRows[0].rankID === rank.rankID
+                })
+                res.render('updatePlayer', { ranks: rankRows, player: playerRows[0] } )
+            })
+        })
+    }
+})
+
+app.post('/players/:playerID/edit', function(req,res){
+    {
+        const { rankID, playerName } = req.body;
+        const { playerID } = req.params;
+        let query1 = `UPDATE Players 
+        SET rankID= ${rankID}, 
+            matchCount= (SELECT COUNT(*) FROM PlayerMatches WHERE playerID = ${playerID}),
+            winCount= (SELECT COUNT(*) 
+                            FROM PlayerMatches 
+                            WHERE playerID = ${playerID}
+                            AND resultID = (SELECT resultID FROM Results WHERE resultName = 'Win')),
+            playerName= '${playerName}',
+            hoursPlayed= (SELECT COALESCE(SUM(Matches.matchDurationInHours), 0)
+                            FROM PlayerMatches
+                            INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID 
+                            AND playerID = ${playerID})
+        WHERE playerID= ${playerID}`
+        let errMessage = "You have failed to update successfully!"
+        let operation = 'updated'
+        db.pool.query(query1, function(error, rows, fields){
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
+            else res.render('success', {operation, successes: rows.affectedRows})
+        })
+    }
+})
+
+app.get('/players/:playerID/delete', function(req,res){
+    {
+        const { playerID } = req.params;
+        let query1 = `SELECT playerName, playerID FROM Players WHERE playerID=${playerID}`
+        
+        db.pool.query(query1, function(error, rows, fields){
+            res.render('deletePlayer', { player: rows[0] } )
+        })
+    }
+})
+
+app.post('/players/:playerID/delete', function(req,res){
+    {
+        let query1 = `DELETE FROM Players WHERE playerID=${req.params.playerID}`
+        let operation = 'deleted'
+        let errMessage = "You have failed to delete successfully!"
+        db.pool.query(query1, function(error, rows, fields){
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
+            else res.render('success', {operation, successes: rows.affectedRows})
         })
     }
 })

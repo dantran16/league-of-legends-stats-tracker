@@ -1,0 +1,40 @@
+<!-- 
+  Citation for the following function:
+  Date: 2/11/2024
+  Adapted from: 
+  Source URL: https://canvas.oregonstate.edu/courses/1946034/pages/code-citation-tips?module_item_id=23809260
+-->
+<div class="update">
+  <form id="updatePlayer" method="POST" action="/players/{{this.player.playerID}}/edit">
+      <legend><h3>Update Player</h3></legend>
+          <fieldset class="fields">
+            <div class="field">
+                <label> Player ID {{this.player.playerID}}</label>
+            </div>
+            <div class="field">
+                <label> Rank Name </label>
+                <select name="rankID">
+                    {{#each ranks}}
+                        {{!-- 
+                            Citation for the following function:
+                            Date: 2/25/2024
+                            Adapted from: 
+                            Source URL: https://stackoverflow.com/questions/10736907/handlebars-js-else-if
+                        --}}
+                        {{#if this.selected}}
+                            <option selected value="{{this.rankID}}">{{this.rankName}}</option>
+                        {{else}}
+                            <option value="{{this.rankID}}">{{this.rankName}}</option>
+                        {{/if}}
+                    {{/each}}
+                </select>
+            </div>
+            <div class="field">
+                <label> Player Name </label> 
+                <input type="text" name="playerName" value="{{this.player.playerName}}">
+            </div>
+    </fieldset>
+    <input class="btn" type="submit" id="UpdateSavePlayer" value="Save Update Player">
+    <a class="btn" href="/playerMatches"><input class="btn" type="button" value="cancel"></a>
+  </form> 
+</div><!-- update -->

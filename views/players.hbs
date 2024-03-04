@@ -16,7 +16,7 @@ Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/St
             {{!-- For just the first row, we print each key of the row object as a header cell so we
             know what each column means when the page renders --}}
             <tr>
-                <th><a href="#">New</a></th>
+                <th><a href="/players/new">New</a></th>
                 <th></th>
                 {{#each data.[0]}}
                 <th>
@@ -33,8 +33,8 @@ Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/St
             {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
             {{#each data}}
             <tr>
-                <td><a href="#">Edit</a></td>
-                <td><a href="#">Delete</a></td>
+                <td><a href='/players/{{this.playerID}}/edit'>Edit</a></td>
+                <td><a href="/players/{{this.playerID}}/delete">Delete</a></td>
                 <td>{{this.playerID}}</td>
                 <td>{{this.rankName}}</td>
                 <td>{{this.matchCount}}</td>
@@ -46,54 +46,3 @@ Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/St
             {{/each}}
         </tbody>
     </table>
-</div>
-
-<div class="insert" style="display: block">
-    <form id="addPlayer">
-        <legend><h3>Add Player</h3></legend>
-          <fieldset class="fields">
-            <label> Rank Name </label>
-            <select name="rankID">
-              <option value="1">Unranked</option>
-              <option value="2">Bronze</option>
-              <option value="3">Silver</option>
-              <option value="4">Gold</option>
-            </select><br>
-            <label> Player Name </label> <input type="text" name="playerName">
-          </fieldset>
-          <input class="btn" type="submit" id="addPlayer" value="Add Player">
-          <input class="btn" type="button" value="Cancel">
-	</form> <!--add new player-->
-</div><!-- insert -->
-
-<div class="update" style="display: block">
-  <form id="updatePlayer">
-      <legend><h3>Update Player</h3></legend>
-          <fieldset class="fields">
-          <label> Player ID </label> 1<br>
-          <label> Rank Name </label>
-            <select name="rankID">
-              <option value="1">Unranked</option>
-              <option value="2">Bronze</option>
-              <option value="3">Silver</option>
-              <option value="4">Gold</option>
-            </select><br>
-          <label> Player Name </label> <input type="text" name="playerName" value="V1negarBottle">
-    </fieldset>
-    <input class="btn" type="submit" id="UpdateSavePlayer" value="Update Player">
-          <input class="btn" type="button" value="Cancel">
-  </form> 
-</div><!-- update -->
-
-<div class="delete" style="display: block">
-  <form id="deletePlayer">
-      <legend><h3>Delete Player</h3></legend>
-          <fieldset class="fields">
-          <p>Are you sure you wish to delete the following?</p>
-          <label> Player ID </label> 1<br>
-            <label> Player Name </label> V1negerBottle
-    </fieldset>
-    <input class="btn" type="submit" id="DeletePlayer" value="Delete Player">
-          <input class="btn" type="button" value="Cancel">
-  </form> 
-</div><!-- delete -->
