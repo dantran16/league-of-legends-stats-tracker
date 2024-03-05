@@ -83,7 +83,8 @@ CREATE OR REPLACE TABLE `Players` (
   `winCount` int(11) NOT NULL DEFAULT 0,
   `hoursPlayed` decimal(3,2) NOT NULL DEFAULT 0,
   PRIMARY KEY (`playerID`),
-  FOREIGN KEY (`rankID`) REFERENCES `Ranks`(`rankID`) ON DELETE SET DEFAULT
+  FOREIGN KEY (`rankID`) REFERENCES `Ranks`(`rankID`) ON DELETE SET DEFAULT,
+  CONSTRAINT checkNegatives CHECK (`matchCount`>=0 AND `winCount`>=0 AND `hoursPlayed`>=0)
 );
 
 -- --------------------------------------------------------
@@ -100,7 +101,8 @@ CREATE OR REPLACE TABLE `Matches` (
   `blueScore` int(11) NOT NULL DEFAULT 0,
   `matchDurationInHours` decimal(4,3) NOT NULL,
   PRIMARY KEY (`matchID`),
-  FOREIGN KEY (`winningTeamID`) REFERENCES `Teams`(`teamID`) ON DELETE RESTRICT 
+  FOREIGN KEY (`winningTeamID`) REFERENCES `Teams`(`teamID`) ON DELETE RESTRICT,
+  CONSTRAINT checkNegatives CHECK (`redScore`>=0 AND `blueScore`>=0 AND `matchDurationInHours`>=0)
 );
 
 -- --------------------------------------------------------
@@ -124,7 +126,8 @@ CREATE OR REPLACE TABLE `PlayerMatches` (
   FOREIGN KEY (`matchID`) REFERENCES `Matches`(`matchID`) ON DELETE CASCADE,
   FOREIGN KEY (`resultID`) REFERENCES `Results`(`resultID`) ON DELETE RESTRICT,
   FOREIGN KEY (`roleID`) REFERENCES `Roles`(`roleID`) ON DELETE RESTRICT,
-  FOREIGN KEY (`championID`) REFERENCES `Champions`(`championID`) ON DELETE RESTRICT
+  FOREIGN KEY (`championID`) REFERENCES `Champions`(`championID`) ON DELETE RESTRICT,
+  CONSTRAINT checkNegatives CHECK (`killCount`>=0 AND `deathCount`>=0 AND `assistCount`>=0)
 );
 
 -- --------------------------------------------------------

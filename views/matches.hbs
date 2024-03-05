@@ -5,12 +5,10 @@
 
         {{!-- Header section --}}
         <thead>
-
             {{!-- For just the first row, we print each key of the row object as a header cell so we
             know what each column means when the page renders --}}
             <tr>
-                <th><a href="#">New</a></th>
-                <th></th>
+                <th colspan="2" class="new"><a href="/matches/new">New Entry</a></th>
                 {{#each data.[0]}}
                 <th>
                     {{@key}}
@@ -26,64 +24,17 @@
             {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
             {{#each data}}
             <tr>
-                <td><a href="#">Edit</a></td>
-                <td><a href="#">Delete</a></td>
+                <td><a href="/matches/{{this.matchID}}/edit">Edit</a></td>
+                <td><a href="/matches/{{this.matchID}}/delete">Delete</a></td>
                 <td>{{this.matchID}}</td>
-                <td>{{this.winningTeamName}}</td>
+                <td>{{this.winningTeam}}</td>
                 <td>{{this.matchDate}}</td>
                 <td>{{this.redScore}}</td>
                 <td>{{this.blueScore}}</td>
                 <td>{{this.matchDurationInHours}}</td>
-                <td><a href="/playerMatches">Stats</a></td>
+                <td><a href="/playerMatches/matchID={{this.matchID}}/">Stats</a></td>
             </tr>
             {{/each}}
         </tbody>
     </table>
 </div>
-
-<div class="insert" style="display: block">
-    <form id="addMatch">
-        <legend><h3>Add Match</h3></legend>
-          <fieldset class="fields">
-            <label> Winning Team </label>
-            <label><input type="radio" name="winningTeamID" value="1"> Red Team</label>
-            <label><input type="radio" name="winningTeamID" value="2"> Blue Team</label><br>
-            <label> Match Date </label> <input type="text" name="matchDate" placeholder="YYYY-MM-DD"><br>
-            <label> Red Score </label> <input type="number" name="redScore"><br>
-            <label> Blue Score </label> <input type="number" name="blueScore"><br>
-            <label> Match Duration (hrs) </label> <input type="number" name="matchDurationInHours">
-          </fieldset>
-          <input class="btn" type="submit" id="addMatch" value="Add Match">
-          <input class="btn" type="button" value="Cancel">
-	</form> <!--add new match-->
-</div><!-- insert -->
-
-<div class="update" style="display: block">
-  <form id="updateMatch">
-      <legend><h3>Update Match</h3></legend>
-          <fieldset class="fields">
-          <label> Match ID </label> 1<br><br>
-          <label> Winning Team </label>
-          <label><input type="radio" name="winningTeamID" value="1"> Red Team</label>
-            <label><input type="radio" name="winningTeamID" value="2"> Blue Team</label><br>
-          <label> Match Date </label> <input type="text" name="matchDate" value="2013-02-05"><br>
-          <label> Red Score </label> <input type="number" name="redScore" value="33"><br>
-          <label> Blue Score </label> <input type="number" name="blueScore" value="14"><br>
-          <label> Match Duration (hrs) </label> <input type="number" name="matchDurationInHours" value="0.437">
-    </fieldset>
-    <input class="btn" type="submit" id="UpdateSaveMatch" value="Update Match">
-          <input class="btn" type="button" value="Cancel">
-  </form> 
-</div><!-- update -->
-
-<div class="delete" style="display: block">
-  <form id="deleteMatch">
-      <legend><h3>Delete Match</h3></legend>
-          <fieldset class="fields">
-          <p>Are you sure you wish to delete the following?</p>
-          <label> Match ID </label> 1
-          </fieldset>
-    <input class="btn" type="submit" id="DeleteMatch" value="Delete Match">
-          <input class="btn" type="button" value="Cancel">
-  </form> 
-</div><!-- delete -->

@@ -9,8 +9,9 @@
       <legend><h3>Update Player</h3></legend>
           <fieldset class="fields">
             <div class="field">
-                <label> Player ID {{this.player.playerID}}</label>
+                <label> Player ID </label> <input type="text" name="playerID" disabled value="{{this.player.playerID}}">
             </div>
+
             <div class="field">
                 <label> Rank Name </label>
                 <select name="rankID">
@@ -29,12 +30,14 @@
                     {{/each}}
                 </select>
             </div>
+
             <div class="field">
                 <label> Player Name </label> 
                 <input type="text" name="playerName" value="{{this.player.playerName}}">
             </div>
     </fieldset>
-    <input class="btn" type="submit" id="UpdateSavePlayer" value="Save Update Player">
-    <a class="btn" href="/playerMatches"><input class="btn" type="button" value="cancel"></a>
+
+    <input class="btn" type="submit" id="updatePlayer" value="Update Player">
+    <a class="btn" href="/playerMatches"><input class="btn" type="button" value="Cancel"></a>
   </form> 
 </div><!-- update -->
