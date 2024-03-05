@@ -1,0 +1,39 @@
+<!-- 
+  Citation for the following function:
+  Date: 2/11/2024
+  Adapted from: 
+  Source URL: https://canvas.oregonstate.edu/courses/1946034/pages/code-citation-tips?module_item_id=23809260
+-->
+<div class="insert">
+  <form id="addMatch" method="POST" action="/matches/new">
+      <legend><h3>Add Match</h3></legend>
+        <fieldset class="fields">
+            <div>
+                <label> Winning Team </label><br>
+                {{#each teams}}
+                <label><input type="radio" value="{{this.teamID}}" name="winningTeamID"> {{this.teamName}} Team </label>
+                {{/each}}
+            </div>
+
+            <div class="field">
+                <label> Match Date </label> <input type="text" name="matchDate" placeholder="YYYY-MM-DD">
+            </div>
+
+            <div class="field">
+                <label> Red Score </label> <input type="number" name="redScore">
+            </div>
+
+            <div class="field">
+                <label> Blue Score </label> <input type="number" name="blueScore">
+            </div>
+
+            <div class="field">
+                <label> Match Duration (hrs) </label> <input type="number" name="matchDurationInHours">
+            </div>
+
+        </fieldset>
+
+        <input class="btn" type="submit" id="addMatch" value="Add Match">
+        <a class="btn" href="/matches"><input class="btn" type="button" value="Cancel"></a>
+	</form> <!--add new match-->
+</div><!-- insert -->
