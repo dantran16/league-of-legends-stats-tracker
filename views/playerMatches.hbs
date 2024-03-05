@@ -12,10 +12,12 @@ Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/St
 
         {{!-- Header section --}}
         <thead>
+
             {{!-- For just the first row, we print each key of the row object as a header cell so we
             know what each column means when the page renders --}}
             <tr>
-                <th colspan="2" class="new"><a href="/playerMatches/new">New Entry</a></th>
+                <th><a href="/playerMatches/new">New</a></th>
+                <th></th>
                 {{#each data.[0]}}
                 <th>
                     {{@key}}
@@ -34,7 +36,7 @@ Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/St
                 <td><a href="/playerMatches/{{this.playerMatchID}}/delete">Delete</a></td>
                 <td>{{this.playerMatchID}}</td>
                 <td>{{this.matchID}}</td>
-                <td>{{this.playerName}}</td>
+                <td>{{this.player}}</td>
                 <td>{{this.role}}</td>
                 <td>{{this.result}}</td>
                 <td>{{this.champion}}</td>

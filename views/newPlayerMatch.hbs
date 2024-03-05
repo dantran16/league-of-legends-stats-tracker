@@ -5,58 +5,51 @@
   Source URL: https://canvas.oregonstate.edu/courses/1946034/pages/code-citation-tips?module_item_id=23809260
 -->
 <div class="insert">
-  <form id="addPlayerMatch" method="POST" action="/playerMatches/new">
-      <legend><h3>Add PlayerMatch</h3></legend>
-        <fieldset class="fields">
-          <div class="field">
-            <label> Match ID </label> <input type="text" name="matchID">
-          </div>
-          
-          <div class="field">
-            <label> Player ID </label> <input type="text" name="playerID">
-          </div>
-
-          <div class="field">
-            <label>Role</label>
-            <select name="roleID">
-              {{#each roles}}
-              <option value="{{this.roleID}}">{{this.roleName}}</option>
-              {{/each}}
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Result</label>
-            <select name="resultID">
-              {{#each results}}
-              <option value="{{this.resultID}}">{{this.resultName}}</option>
-              {{/each}}
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Champion</label> 
-            <select name="championID">
-              {{#each champions}}
-              <option value="{{this.championID}}">{{this.championName}}</option>
-              {{/each}}
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Kills</label> <input type="number" name="killCount">
-          </div>
-
-          <div class="field">
-            <label>Deaths</label> <input type="number" name="deathCount">
-          </div>
-
-          <div class="field">
-            <label>Assists</label> <input type="number" name="assistCount">
-          </div>
-        </fieldset>
-
-        <input class="btn" type="submit" id="addPlayerMatch" value="Add Player Match">
-        <a class="btn" href="/playerMatches"><input class="btn" type="button" value="Cancel"></a>
+    <form id="addPlayerMatch" method="POST" action="/playerMatches/new">
+        <legend><h3>Add PlayerMatch</h3></legend>
+          <fieldset class="fields">
+            <div class="field">
+              <label> Match ID </label> <input type="text" name="matchID">
+              
+            </div>
+            <div class="field">
+              <label> Player ID </label> <input type="text" name="playerID">
+            </div>
+            <div class="field">
+              <label>Role</label>
+              <select name="roleID">
+                {{#each roles}}
+                <option value="{{this.roleID}}">{{this.roleName}}</option>
+                {{/each}}
+              </select>
+            </div>
+            <div class="field">
+              <label>Result</label>
+              <select name="resultID">
+                {{#each results}}
+                <option value="{{this.resultID}}">{{this.resultName}}</option>
+                {{/each}}
+              </select>
+            </div>
+            <div class="field">
+              <label>Champion</label> 
+              <select name="championID">
+                {{#each champions}}
+                <option value="{{this.championID}}">{{this.championName}}</option>
+                {{/each}}
+              </select>
+            </div>
+            <div class="field">
+              <label>Kills</label> <input type="number" name="killCount">
+            </div>
+            <div class="field">
+              <label>Deaths</label> <input type="number" name="deathCount">
+            </div>
+            <div class="field">
+              <label>Assists</label> <input type="number" name="assistCount">
+            </div>
+          </fieldset>
+          <input class="btn" type="submit" id="addPlayerMatch" value="Add Player Match">
+          <a class="btn" href="/playerMatches"><input class="btn" type="button" value="Cancel"></a>
 	</form> <!--add new playerMatch-->
 </div><!-- insert -->

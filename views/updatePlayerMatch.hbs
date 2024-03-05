@@ -1,26 +1,30 @@
-{{!-- 
-    Citation for the if/else function:
-    Date: 2/25/2024
-    Adapted from: 
-    Source URL: https://stackoverflow.com/questions/10736907/handlebars-js-else-if
---}}
+<!-- 
+  Citation for the following function:
+  Date: 2/11/2024
+  Adapted from: 
+  Source URL: https://canvas.oregonstate.edu/courses/1946034/pages/code-citation-tips?module_item_id=23809260
+-->
 <div class="update">
     <form id="addPlayerMatch" method="POST" action="/playerMatches/{{this.playerMatch.playerMatchID}}/edit">
         <legend><h3>Update PlayerMatch</h3></legend>
           <fieldset class="fields">
             <div class="field">
               <label> Match ID </label> <input type="text" name="matchID" disabled value="{{this.playerMatch.matchID}}">
+              
             </div>
-
             <div class="field">
-              <label> Player Name </label> <input type="text" name="playerID" disabled value="{{this.playerMatch.playerName}}">
+              <label> Player ID </label> <input type="text" name="playerID" disabled value="{{this.playerMatch.playerID}}">
             </div>
-
             <div class="field">
               <label>Role</label>
               <select name="roleID">
                 {{#each roles}}
-                    
+                    {{!-- 
+                        Citation for the following function:
+                        Date: 2/25/2024
+                        Adapted from: 
+                        Source URL: https://stackoverflow.com/questions/10736907/handlebars-js-else-if
+                    --}}
                     {{#if this.selected}}
                         <option selected value="{{this.roleID}}">{{this.roleName}}</option>
                     {{else}}
@@ -29,11 +33,16 @@
                 {{/each}}
               </select>
             </div>
-
             <div class="field">
               <label>Result</label>
               <select name="resultID">
                 {{#each results}}
+                    {{!-- 
+                        Citation for the following function:
+                        Date: 2/25/2024
+                        Adapted from: 
+                        Source URL: https://stackoverflow.com/questions/10736907/handlebars-js-else-if
+                    --}}
                     {{#if this.selected}}
                         <option selected value="{{this.resultID}}">{{this.resultName}}</option>
                     {{else}}
@@ -42,11 +51,16 @@
                 {{/each}}
               </select>
             </div>
-
             <div class="field">
               <label>Champion</label> 
               <select name="championID">
                 {{#each champions}}
+                    {{!-- 
+                        Citation for the following function:
+                        Date: 2/25/2024
+                        Adapted from: 
+                        Source URL: https://stackoverflow.com/questions/10736907/handlebars-js-else-if
+                    --}}
                     {{#if this.selected}}
                         <option selected value="{{this.championID}}">{{this.championName}}</option>
                     {{else}}
@@ -55,15 +69,12 @@
                 {{/each}}
               </select>
             </div>
-
             <div class="field">
               <label>Kills</label> <input type="number" name="killCount" value="{{this.playerMatch.killCount}}">
             </div>
-
             <div class="field">
               <label>Deaths</label> <input type="number" name="deathCount" value="{{this.playerMatch.deathCount}}">
             </div>
-            
             <div class="field">
               <label>Assists</label> <input type="number" name="assistCount" value="{{this.playerMatch.assistCount}}">
             </div>
