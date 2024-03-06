@@ -10,7 +10,7 @@
         <fieldset class="fields">
             <div>
                 <label> Winning Team </label><br>
-                {{#each teams}}
+                {{#each team}}
                 <label><input type="radio" value="{{this.teamID}}" name="winningTeamID"> {{this.teamName}} Team </label>
                 {{/each}}
             </div>

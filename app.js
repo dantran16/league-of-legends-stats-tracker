@@ -57,7 +57,7 @@ app.get('/matches/new', function(req, res){
         let query1 = `SELECT teamID, teamName FROM Teams ORDER BY teamID`
 
         db.pool.query(query1, function(teamError, teamRows, teamFields){
-                res.render('newMatch', { team: teamRows } )
+            res.render('newMatch', { team: teamRows } )
         })
     }
 })
@@ -161,7 +161,7 @@ app.get('/playerMatches', function(req, res){
     {
         let query1 = `SELECT  playerMatchID, Matches.matchID, Players.playerName, Roles.roleName AS role, Results.resultName AS result, Champions.championName AS champion, 
             killCount AS kills, deathCount AS deaths, assistCount AS assists FROM PlayerMatches
-            INNER JOIN Players ON PlayerMatches.playerID = Players.playerID 
+            LEFT JOIN Players ON PlayerMatches.playerID = Players.playerID 
             INNER JOIN Matches ON PlayerMatches.matchID = Matches.matchID
             INNER JOIN Roles ON PlayerMatches.roleID = Roles.roleID
             INNER JOIN Results ON PlayerMatches.resultID = Results.resultID
@@ -174,7 +174,7 @@ app.get('/playerMatches', function(req, res){
     }
 })
 
-app.get('/playerMatches/matchID=:matchID', function(req, res){
+app.get('/playerMatches/matchID/:matchID', function(req, res){
     {
         const { matchID } = req.params;
         let query1 = `SELECT  playerMatchID, Matches.matchID, Players.playerName, Roles.roleName AS role, Results.resultName AS result, Champions.championName AS champion, 
@@ -193,7 +193,7 @@ app.get('/playerMatches/matchID=:matchID', function(req, res){
     }
 })
 
-app.get('/playerMatches/playerID=:playerID', function(req, res){
+app.get('/playerMatches/playerID/:playerID', function(req, res){
     {
         const { playerID } = req.params;
         let query1 = `SELECT  playerMatchID, Matches.matchID, Players.playerName, Roles.roleName AS role, Results.resultName AS result, Champions.championName AS champion, 
@@ -233,14 +233,24 @@ app.get('/playerMatches/new', function(req, res){
 
 app.post('/playerMatches/new', function(req,res){
     {
-        const { playerID, matchID, resultID, roleID, championID, killCount, deathCount, assistCount } = req.body;
-        let query1 = `INSERT INTO PlayerMatches (playerID, matchID, resultID, roleID, championID, killCount, deathCount, assistCount) 
-        VALUES (${playerID},${matchID},${resultID},${roleID},${championID},${killCount}, ${deathCount}, ${assistCount})`
+        const { playerName, matchID, resultID, roleID, championID, killCount, deathCount, assistCount } = req.body;
+        let query1 = `SELECT playerID FROM Players WHERE playerName='${playerName}'`
         let errMessage = "You have failed to insert successfully!"
         let operation = 'inserted'
-        db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+
+        db.pool.query(query1, function(playerError, playerRows, playerFields){
+            if(playerRows.length==0) {
+                res.render('error', {sql: query1, sqlMessage: `No records for '${playerName}'`, code: "n/a", errMessage})
+                return
+            }
+            const playerID = playerRows[0].playerID;
+            let query2 = `INSERT INTO PlayerMatches (playerID, matchID, resultID, roleID, championID, killCount, deathCount, assistCount) 
+                VALUES (${playerID},${matchID},${resultID},${roleID},${championID},${killCount}, ${deathCount}, ${assistCount})`
+
+            db.pool.query(query2, function(playerMatchesError, playerMatchesRows, playerMatchesFields){
+                if(playerMatchesError) res.render('error', {sql: playerMatchesError.sql, sqlMessage: playerMatchesError.sqlMessage, code: playerMatchesError.code,errMessage})
+                else res.render('success', {operation, successes: playerMatchesRows.affectedRows})
+            })
         })
     }
 })
@@ -253,7 +263,7 @@ app.get('/playerMatches/:playerMatchID/edit', function(req,res){
         let query3 = `SELECT championID, championName FROM Champions`
         let query4 = `SELECT playerMatchID, Matches.matchID, Players.playerName, Roles.roleID, Results.resultID, Champions.championID, 
             killCount, deathCount, assistCount FROM PlayerMatches
-            INNER JOIN Players ON PlayerMatches.playerID = Players.playerID 
+            LEFT JOIN Players ON PlayerMatches.playerID = Players.playerID 
             INNER JOIN Matches ON PlayerMatches.matchID = Matches.matchID
             INNER JOIN Roles ON PlayerMatches.roleID = Roles.roleID
             INNER JOIN Results ON PlayerMatches.resultID = Results.resultID
@@ -286,20 +296,32 @@ app.get('/playerMatches/:playerMatchID/edit', function(req,res){
 
 app.post('/playerMatches/:playerMatchID/edit', function(req,res){
     {
-        const { resultID, roleID, championID, killCount, deathCount, assistCount } = req.body;
-        let query1 = `UPDATE PlayerMatches 
-            SET resultID= ${resultID}, 
+        const { playerName, resultID, roleID, championID, killCount, deathCount, assistCount } = req.body;
+        let query1 = `SELECT playerID FROM Players WHERE playerName='${playerName}'`
+        let errMessage = "You have failed to update successfully!"
+        let operation = 'updated'
+        
+        db.pool.query(query1, function(playerError, playerRows, playerFields){
+            const playerID = playerRows.length ? `${playerRows[0].playerID}`: "null"
+            if(playerName && playerRows.length==0) {
+                res.render('error', {sql: query1, sqlMessage: "Player does not exist.", code: "", errMessage})
+                return
+            }
+
+            let query2 = `UPDATE PlayerMatches 
+            SET playerID= ${playerID},
+                resultID= ${resultID}, 
                 roleID= ${roleID},
                 championID= ${championID},
                 killCount= ${killCount},
                 deathCount= ${deathCount},
                 assistCount= ${assistCount}
             WHERE playerMatchID=${req.params.playerMatchID}`
-        let errMessage = "You have failed to update successfully!"
-        let operation = 'updated'
-        db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+
+            db.pool.query(query2, function(playerMatchesError, playerMatchesRows, playerMatchesFields){
+                if(playerMatchesError) res.render('error', {sql: playerMatchesError.sql, sqlMessage: playerMatchesError.sqlMessage, code: playerMatchesError.code,errMessage})
+                else res.render('success', {operation, successes: playerMatchesRows.affectedRows})
+            })
         })
     }
 })

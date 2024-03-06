@@ -14,15 +14,15 @@
             
             <div>
                 <label> Winning Team </label>
-                {{#each teams}}
-                        {{!-- 
-                            Citation for the following function:
-                            Date: 2/25/2024
-                            Adapted from: 
-                            Source URL: https://stackoverflow.com/questions/10736907/handlebars-js-else-if
-                        --}}
+                {{#each team}}
+                    {{!-- 
+                        Citation for the following function:
+                        Date: 2/25/2024
+                        Adapted from: 
+                        Source URL: https://stackoverflow.com/questions/10736907/handlebars-js-else-if
+                    --}}
                     {{#if this.selected}}
-                        <label><input type="radio" value="{{this.teamID}}" name="winningTeamID"> {{this.teamName}} Team </label>
+                        <label><input type="radio" checked="checked" value="{{this.teamID}}" name="winningTeamID"> {{this.teamName}} Team </label>
                     {{else}}
                         <label><input type="radio" value="{{this.teamID}}" name="winningTeamID"> {{this.teamName}} Team </label>
                     {{/if}}

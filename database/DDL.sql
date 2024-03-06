@@ -127,7 +127,8 @@ CREATE OR REPLACE TABLE `PlayerMatches` (
   FOREIGN KEY (`resultID`) REFERENCES `Results`(`resultID`) ON DELETE RESTRICT,
   FOREIGN KEY (`roleID`) REFERENCES `Roles`(`roleID`) ON DELETE RESTRICT,
   FOREIGN KEY (`championID`) REFERENCES `Champions`(`championID`) ON DELETE RESTRICT,
-  CONSTRAINT checkNegatives CHECK (`killCount`>=0 AND `deathCount`>=0 AND `assistCount`>=0)
+  CONSTRAINT checkNegatives CHECK (`killCount`>=0 AND `deathCount`>=0 AND `assistCount`>=0),
+  CONSTRAINT uniquePlayer UNIQUE (playerID, matchID)
 );
 
 -- --------------------------------------------------------
@@ -498,7 +499,7 @@ WHERE p.playerID = subquery.pid;
 -- Source URL: https://dba.stackexchange.com/questions/218762/how-to-update-from-join-with-group-by
 UPDATE Players p, (SELECT Players.playerID AS pid, COUNT(*) AS wins
     FROM PlayerMatches 
-    INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID 
+    INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID
     INNER JOIN Players ON PlayerMatches.playerID=Players.playerID
     WHERE resultId = (SELECT resultID FROM Results WHERE resultName='Win')
     GROUP BY pid
