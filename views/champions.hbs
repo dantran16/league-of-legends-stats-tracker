@@ -12,26 +12,26 @@ Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
 
         {{!-- Header section --}}
         <thead>
-            <tr><th colspan="2"><a href="/champions/new">New Entry</a></th></tr>
+            <th colspan="2"><a href="/champions/new">New Entry</a></th>
             {{!-- For just the first row, we print each key of the row object as a header cell so we
             know what each column means when the page renders --}}
-            <tr>
-                {{#each data.[0]}}
-                <th>
-                    {{@key}}
-                </th>
-                {{/each}}
-            </tr>
+            {{#each data.[0]}}
+            <th colspan="2">
+                {{@key}}
+            </th>
+            {{/each}}
         </thead>
 
         {{!-- Body section --}}
         <tbody>
-
+            
             {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
             {{#each data}}
             <tr>
-                <td>{{this.championID}}</td>
-                <td>{{this.championName}}</td>
+                <td><a href='/champions/{{this.championID}}/edit'>Edit</a></td>
+                <td><a href="/champions/{{this.championID}}/delete">Delete</a></td>
+                <td colspan="2">{{this.championID}}</td>
+                <td colspan="2">{{this.championName}}</td>
             </tr>
             {{/each}}
         </tbody>

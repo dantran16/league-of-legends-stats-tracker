@@ -1,0 +1,20 @@
+<!-- 
+  Citation for the following function:
+  Date: 2/11/2024
+  Adapted from: 
+  Source URL: https://canvas.oregonstate.edu/courses/1946034/pages/code-citation-tips?module_item_id=23809260
+-->
+<div class="delete">
+  <form id="deleteChampion" method="POST" href="/champions/{{this.champion.championID}}/delete">
+      <legend><h3>Delete Champion</h3></legend>
+          <fieldset class="fields">
+            <p>Are you sure you wish to delete Champion ID: {{this.champion.championID}}?</p>
+            <div class="field">
+                <label> Champion Name </label> 
+                <input type="text" name="championName" value="{{this.champion.championName}}" disabled>
+            </div>
+    </fieldset>
+    <input class="btn" type="submit" id="DeleteChampion" value="Delete Champion">
+    <a class="btn" href="/champions"><input class="btn" type="button" value="Cancel"></a>
+  </form> 
+</div><!-- delete -->

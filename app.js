@@ -423,8 +423,14 @@ app.get('/players/:playerID/edit', function(req,res){
 
 app.post('/players/:playerID/edit', function(req,res){
     {
-        const { rankID, playerName } = req.body;
+        const { rankID } = req.body;
         const { playerID } = req.params;
+
+        let errMessage = "You have failed to update successfully!"
+        let operation = 'updated'
+
+        const playerName = typeof req.body.playerName === "string" && req.body.playerName.length === 0 ? 'null' : `'${req.body.playerName}'`
+
         let query1 = `UPDATE Players 
             SET rankID= ${rankID}, 
                 matchCount= (SELECT COUNT(*) FROM PlayerMatches WHERE playerID = ${playerID}),
@@ -432,30 +438,12 @@ app.post('/players/:playerID/edit', function(req,res){
                                 FROM PlayerMatches 
                                 WHERE playerID = ${playerID}
                                 AND resultID = (SELECT resultID FROM Results WHERE resultName = 'Win')),
-                playerName= '${playerName}',
+                playerName= ${playerName},
                 hoursPlayed= (SELECT COALESCE(SUM(Matches.matchDurationInHours), 0)
                                 FROM PlayerMatches
                                 INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID 
                                 AND playerID = ${playerID})
             WHERE playerID= ${playerID}`
-        let errMessage = "You have failed to update successfully!"
-        let operation = 'updated'
-
-        if (typeof playerName === "string" && playerName.length === 0) {
-            query1 = `UPDATE Players 
-                SET rankID= ${rankID}, 
-                    matchCount= (SELECT COUNT(*) FROM PlayerMatches WHERE playerID = ${playerID}),
-                    winCount= (SELECT COUNT(*) 
-                                    FROM PlayerMatches 
-                                    WHERE playerID = ${playerID}
-                                    AND resultID = (SELECT resultID FROM Results WHERE resultName = 'Win')),
-                    playerName= null,
-                    hoursPlayed= (SELECT COALESCE(SUM(Matches.matchDurationInHours), 0)
-                                    FROM PlayerMatches
-                                    INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID 
-                                    AND playerID = ${playerID})
-                WHERE playerID= ${playerID}`
-        }
         
         db.pool.query(query1, function(error, rows, fields){
             if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
@@ -520,6 +508,55 @@ app.post('/champions/new', function(req,res){
             query1 = `INSERT INTO Champions (championName) VALUES (null)`
         }
 
+        db.pool.query(query1, function(error, rows, fields){
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
+            else res.render('success', {operation, successes: rows.affectedRows})
+        })
+    }
+})
+
+app.get('/champions/:championID/edit', function(req,res){
+    {
+        const { championID } = req.params
+        let query1 =  `SELECT championID, championName FROM Champions WHERE championID = ${championID}`
+        // Query for champions
+        db.pool.query(query1, function(errors, rows, fields){
+            res.render('updateChampion', { champion: rows[0] } )
+        })
+    }
+})
+
+app.post('/champions/:championID/edit', function(req,res){
+    {
+        const { championID, championName } = req.body;
+        let query1 = `UPDATE Players SET playerName= '${championName}' WHERE playerID= ${championID}`
+        let errMessage = "You have failed to update successfully!"
+        let operation = 'updated'
+        
+        db.pool.query(query1, function(error, rows, fields){
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
+            else res.render('success', {operation, successes: rows.affectedRows})
+        })
+    }
+})
+
+// Delete
+app.get('/champions/:championID/delete', function(req,res){
+    {
+        const { championID } = req.params;
+        let query1 = `SELECT championName, championID FROM Champions WHERE championID=${championID}`
+        
+        db.pool.query(query1, function(error, rows, fields){
+            res.render('deleteChampion', { champion: rows[0] } )
+        })
+    }
+})
+
+app.post('/champions/:championID/delete', function(req,res){
+    {
+        let query1 = `DELETE FROM Champions WHERE championID=${req.params.championID}`
+        let operation = 'deleted'
+        let errMessage = "You have failed to delete successfully!"
         db.pool.query(query1, function(error, rows, fields){
             if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
             else res.render('success', {operation, successes: rows.affectedRows})
