@@ -1,0 +1,23 @@
+<!-- 
+  Citation for the following function:
+  Date: 2/11/2024
+  Adapted from: 
+  Source URL: https://canvas.oregonstate.edu/courses/1946034/pages/code-citation-tips?module_item_id=23809260
+-->
+<div class="update">
+  <form id="updateRank" method="POST" action="/ranks/{{this.rank.rankID}}/edit">
+      <legend><h3>Update Rank</h3></legend>
+          <fieldset class="fields">
+            <div class="field">
+                <label> Rank ID </label> <input type="text" name="rankID" disabled value="{{this.rank.rankID}}">
+            </div>
+            <div class="field">
+                <label> Rank Name </label> 
+                <input type="text" name="rankName" value="{{this.rank.rankName}}">
+            </div>
+    </fieldset>
+
+    <input class="btn" type="submit" id="updateRank" value="Update Rank">
+    <a class="btn" href="/ranks"><input class="btn" type="button" value="Cancel"></a>
+  </form> 
+</div><!-- update -->
