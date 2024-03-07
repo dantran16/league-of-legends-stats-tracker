@@ -504,7 +504,7 @@ app.post('/champions/new', function(req,res){
         let errMessage = "You have failed to insert successfully!"
         let operation = 'inserted'
 
-        if (typeof championName === "string" && championName.length === 0) {
+        if (typeof championName === "string" && championName.trim().length === 0) {
             query1 = `INSERT INTO Champions (championName) VALUES (null)`
         }
 
@@ -515,6 +515,7 @@ app.post('/champions/new', function(req,res){
     }
 })
 
+// Edit Champions
 app.get('/champions/:championID/edit', function(req,res){
     {
         const { championID } = req.params
@@ -528,11 +529,16 @@ app.get('/champions/:championID/edit', function(req,res){
 
 app.post('/champions/:championID/edit', function(req,res){
     {
-        const { championID, championName } = req.body;
-        let query1 = `UPDATE Players SET playerName= '${championName}' WHERE playerID= ${championID}`
+        const { championName } = req.body;
+        const { championID } = req.params;
+        let query1 = `UPDATE Champions SET championName= '${championName}' WHERE championID= ${championID}`
         let errMessage = "You have failed to update successfully!"
         let operation = 'updated'
         
+        if (typeof championName === "string" && championName.trim().length === 0) {
+            query1 = `UPDATE Champions SET championName=badstring WHERE championID= ${championID}`
+        }
+
         db.pool.query(query1, function(error, rows, fields){
             if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
             else res.render('success', {operation, successes: rows.affectedRows})
@@ -540,7 +546,7 @@ app.post('/champions/:championID/edit', function(req,res){
     }
 })
 
-// Delete
+// Delete champions
 app.get('/champions/:championID/delete', function(req,res){
     {
         const { championID } = req.params;
@@ -603,6 +609,61 @@ app.post('/ranks/new', function(req,res){
     }
 })
 
+// Edit Ranks
+app.get('/ranks/:rankID/edit', function(req,res){
+    {
+        const { rankID } = req.params
+        let query1 =  `SELECT rankID, rankName FROM Ranks WHERE rankID = ${rankID}`
+        // Query for ranks
+        db.pool.query(query1, function(errors, rows, fields){
+            res.render('updateRank', { rank: rows[0] } )
+        })
+    }
+})
+
+app.post('/ranks/:rankID/edit', function(req,res){
+    {
+        const { rankName } = req.body;
+        const { rankID } = req.params;
+        let query1 = `UPDATE Ranks SET rankName= '${rankName}' WHERE rankID= ${rankID}`
+        let errMessage = "You have failed to update successfully!"
+        let operation = 'updated'
+        
+        if (typeof rankName === "string" && rankName.trim().length === 0) {
+            query1 = `UPDATE Ranks SET rankName=badstring WHERE rankID= ${rankID}`
+        }
+
+        db.pool.query(query1, function(error, rows, fields){
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
+            else res.render('success', {operation, successes: rows.affectedRows})
+        })
+    }
+})
+
+// Delete ranks
+app.get('/ranks/:rankID/delete', function(req,res){
+    {
+        const { rankID } = req.params;
+        let query1 = `SELECT rankName, rankID FROM Ranks WHERE rankID=${rankID}`
+        
+        db.pool.query(query1, function(error, rows, fields){
+            res.render('deleteRank', { rank: rows[0] } )
+        })
+    }
+})
+
+app.post('/ranks/:rankID/delete', function(req,res){
+    {
+        let query1 = `DELETE FROM Ranks WHERE rankID=${req.params.rankID}`
+        let operation = 'deleted'
+        let errMessage = "You have failed to delete successfully!"
+        db.pool.query(query1, function(error, rows, fields){
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
+            else res.render('success', {operation, successes: rows.affectedRows})
+        })
+    }
+})
+
 /* ----------------------------------------------------------------------------------------
     Results Section
 */
@@ -635,6 +696,61 @@ app.post('/results/new', function(req,res){
             query1 = `INSERT INTO Results (resultName) VALUES (null)`
         }
 
+        db.pool.query(query1, function(error, rows, fields){
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
+            else res.render('success', {operation, successes: rows.affectedRows})
+        })
+    }
+})
+
+// Edit Results
+app.get('/results/:resultID/edit', function(req,res){
+    {
+        const { resultID } = req.params
+        let query1 =  `SELECT resultID, resultName FROM Results WHERE resultID = ${resultID}`
+        // Query for results
+        db.pool.query(query1, function(errors, rows, fields){
+            res.render('updateResult', { result: rows[0] } )
+        })
+    }
+})
+
+app.post('/results/:resultID/edit', function(req,res){
+    {
+        const { resultName } = req.body;
+        const { resultID } = req.params;
+        let query1 = `UPDATE Results SET resultName= '${resultName}' WHERE resultID= ${resultID}`
+        let errMessage = "You have failed to update successfully!"
+        let operation = 'updated'
+        
+        if (typeof resultName === "string" && resultName.trim().length === 0) {
+            query1 = `UPDATE Results SET resultName=badstring WHERE resultID= ${resultID}`
+        }
+
+        db.pool.query(query1, function(error, rows, fields){
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
+            else res.render('success', {operation, successes: rows.affectedRows})
+        })
+    }
+})
+
+// Delete results
+app.get('/results/:resultID/delete', function(req,res){
+    {
+        const { resultID } = req.params;
+        let query1 = `SELECT resultName, resultID FROM Results WHERE resultID=${resultID}`
+        
+        db.pool.query(query1, function(error, rows, fields){
+            res.render('deleteResult', { result: rows[0] } )
+        })
+    }
+})
+
+app.post('/results/:resultID/delete', function(req,res){
+    {
+        let query1 = `DELETE FROM Results WHERE resultID=${req.params.resultID}`
+        let operation = 'deleted'
+        let errMessage = "You have failed to delete successfully!"
         db.pool.query(query1, function(error, rows, fields){
             if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
             else res.render('success', {operation, successes: rows.affectedRows})
@@ -681,6 +797,61 @@ app.post('/roles/new', function(req,res){
     }
 })
 
+// Edit Roles
+app.get('/roles/:roleID/edit', function(req,res){
+    {
+        const { roleID } = req.params
+        let query1 =  `SELECT roleID, roleName FROM Roles WHERE roleID = ${roleID}`
+        // Query for roles
+        db.pool.query(query1, function(errors, rows, fields){
+            res.render('updateRole', { role: rows[0] } )
+        })
+    }
+})
+
+app.post('/roles/:roleID/edit', function(req,res){
+    {
+        const { roleName } = req.body;
+        const { roleID } = req.params;
+        let query1 = `UPDATE Roles SET roleName= '${roleName}' WHERE roleID= ${roleID}`
+        let errMessage = "You have failed to update successfully!"
+        let operation = 'updated'
+        
+        if (typeof roleName === "string" && roleName.trim().length === 0) {
+            query1 = `UPDATE Roles SET roleName=badstring WHERE roleID= ${roleID}`
+        }
+
+        db.pool.query(query1, function(error, rows, fields){
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
+            else res.render('success', {operation, successes: rows.affectedRows})
+        })
+    }
+})
+
+// Delete roles
+app.get('/roles/:roleID/delete', function(req,res){
+    {
+        const { roleID } = req.params;
+        let query1 = `SELECT roleName, roleID FROM Roles WHERE roleID=${roleID}`
+        
+        db.pool.query(query1, function(error, rows, fields){
+            res.render('deleteRole', { role: rows[0] } )
+        })
+    }
+})
+
+app.post('/roles/:roleID/delete', function(req,res){
+    {
+        let query1 = `DELETE FROM Roles WHERE roleID=${req.params.roleID}`
+        let operation = 'deleted'
+        let errMessage = "You have failed to delete successfully!"
+        db.pool.query(query1, function(error, rows, fields){
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
+            else res.render('success', {operation, successes: rows.affectedRows})
+        })
+    }
+})
+
 /* ----------------------------------------------------------------------------------------
     Teams Section
 */
@@ -713,6 +884,61 @@ app.post('/teams/new', function(req,res){
             query1 = `INSERT INTO Teams (teamName) VALUES (null)`
         }
 
+        db.pool.query(query1, function(error, rows, fields){
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
+            else res.render('success', {operation, successes: rows.affectedRows})
+        })
+    }
+})
+
+// Edit Teams
+app.get('/teams/:teamID/edit', function(req,res){
+    {
+        const { teamID } = req.params
+        let query1 =  `SELECT teamID, teamName FROM Teams WHERE teamID = ${teamID}`
+        // Query for teams
+        db.pool.query(query1, function(errors, rows, fields){
+            res.render('updateTeam', { team: rows[0] } )
+        })
+    }
+})
+
+app.post('/teams/:teamID/edit', function(req,res){
+    {
+        const { teamName } = req.body;
+        const { teamID } = req.params;
+        let query1 = `UPDATE Teams SET teamName= '${teamName}' WHERE teamID= ${teamID}`
+        let errMessage = "You have failed to update successfully!"
+        let operation = 'updated'
+        
+        if (typeof teamName === "string" && teamName.trim().length === 0) {
+            query1 = `UPDATE Teams SET teamName=badstring WHERE teamID= ${teamID}`
+        }
+
+        db.pool.query(query1, function(error, rows, fields){
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
+            else res.render('success', {operation, successes: rows.affectedRows})
+        })
+    }
+})
+
+// Delete teams
+app.get('/teams/:teamID/delete', function(req,res){
+    {
+        const { teamID } = req.params;
+        let query1 = `SELECT teamName, teamID FROM Teams WHERE teamID=${teamID}`
+        
+        db.pool.query(query1, function(error, rows, fields){
+            res.render('deleteTeam', { team: rows[0] } )
+        })
+    }
+})
+
+app.post('/teams/:teamID/delete', function(req,res){
+    {
+        let query1 = `DELETE FROM Teams WHERE teamID=${req.params.teamID}`
+        let operation = 'deleted'
+        let errMessage = "You have failed to delete successfully!"
         db.pool.query(query1, function(error, rows, fields){
             if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
             else res.render('success', {operation, successes: rows.affectedRows})

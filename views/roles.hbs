@@ -12,16 +12,14 @@ Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/St
 
         {{!-- Header section --}}
         <thead>
-            <tr><th colspan="2"><a href="/roles/new">New Entry</a></th></tr>
+            <th colspan="2"><a href="/roles/new">New Entry</a></th>
             {{!-- For just the first row, we print each key of the row object as a header cell so we
             know what each column means when the page renders --}}
-            <tr>
-                {{#each data.[0]}}
-                <th>
-                    {{@key}}
-                </th>
-                {{/each}}
-            </tr>
+            {{#each data.[0]}}
+            <th colspan="2">
+                {{@key}}
+            </th>
+            {{/each}}
         </thead>
 
         {{!-- Body section --}}
@@ -30,8 +28,10 @@ Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/St
             {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
             {{#each data}}
             <tr>
-                <td>{{this.roleID}}</td>
-                <td>{{this.roleName}}</td>
+                <td><a href='/roles/{{this.roleID}}/edit'>Edit</a></td>
+                <td><a href="/roles/{{this.roleID}}/delete">Delete</a></td>
+                <td colspan="2">{{this.roleID}}</td>
+                <td colspan="2">{{this.roleName}}</td>
             </tr>
             {{/each}}
         </tbody>
