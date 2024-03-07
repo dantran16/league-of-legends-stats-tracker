@@ -77,7 +77,6 @@ app.post('/matches/new', function(req,res){
             WHERE p.playerID = subquery.pid;`
         let errMessage = "You have failed to insert successfully!"
         let operation = 'inserted'
-        
         db.pool.query(query1, function(error, rows, fields){
             if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
             else res.render('success', {operation, successes: rows.affectedRows})
@@ -89,7 +88,7 @@ app.post('/matches/new', function(req,res){
 app.get('/matches/:matchID/edit', function(req,res){
     {
         let query1 = `SELECT teamID, teamName FROM Teams ORDER BY teamID`
-        let query2 =  `SELECT matchID, winningTeamID, FORMAT(matchDate, 'MMM dd yyyy') AS date, redScore, blueScore, matchDurationInHours 
+        let query2 =  `SELECT matchID, winningTeamID,  matchDate, redScore, blueScore, matchDurationInHours 
             FROM Matches WHERE matchID = ${req.params.matchID}`
 
         // Query for teams
@@ -100,6 +99,11 @@ app.get('/matches/:matchID/edit', function(req,res){
                 teamRows.forEach(team => {
                     team.selected = matchRows[0].winningTeamID === team.teamID
                 })
+                // The following line is based on:
+                // Date: 3/6/2024
+                // Based on:
+                // Source URL: https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd#:~:text=The%20simplest%20way%20to%20convert,(%22T%22)%5B0%5D%3B
+                matchRows[0].matchDate = matchRows[0].matchDate.toISOString().slice(0, 10)
                 res.render('updateMatch', { team: teamRows, match: matchRows[0] } )
             })
         })
