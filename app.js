@@ -552,7 +552,7 @@ app.post('/players/new', function(req,res){
         let operation = 'inserted'
 
         if (typeof playerName === "string" && playerName.trim().length === 0) {
-            `INSERT INTO Players (rankID, playerName, matchCount, winCount, hoursPlayed) VALUES (${rankID},null,0,0,0)`
+            query1 = `INSERT INTO Players (rankID, playerName, matchCount, winCount, hoursPlayed) VALUES (${rankID},null,0,0,0)`
         }
 
         db.pool.query(query1, function(error, rows, fields){
@@ -590,7 +590,7 @@ app.post('/players/:playerID/edit', function(req,res){
         let errMessage = "You have failed to update successfully!"
         let operation = 'updated'
 
-        const playerName = typeof req.body.playerName === "string" && req.body.playerName.trim().length === 0 ? 'null' : `'${req.body.playerName}'`
+        const playerName = typeof req.body.playerName === "string" && req.body.playerName.trim().length === 0 ? 'badstring' : `'${req.body.playerName}'`
 
         let query1 = `UPDATE Players 
             SET rankID= ${rankID}, 
