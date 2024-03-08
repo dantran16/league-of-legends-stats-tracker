@@ -464,7 +464,7 @@ INSERT INTO PlayerMatches (playerID, matchID, roleID, resultID, championID, kill
 UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(SUM(Matches.matchDurationInHours), 0) AS totalHours
     FROM PlayerMatches 
     INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID 
-    INNER JOIN Players ON PlayerMatches.playerID=Players.playerID
+    RIGHT OUTER JOIN Players ON PlayerMatches.playerID=Players.playerID
     GROUP BY pid
   ) subquery
 SET p.hoursPlayed = subquery.totalHours
@@ -479,10 +479,10 @@ WHERE p.playerID = subquery.pid;
 -- Date: 02/06/2024
 -- Adapted from:
 -- Source URL: https://dba.stackexchange.com/questions/218762/how-to-update-from-join-with-group-by
-UPDATE Players p, (SELECT Players.playerID AS pid, COUNT(*) AS matches
+UPDATE Players p, (SELECT Players.playerID AS pid, COUNT(Matches.matchID) AS matches
     FROM PlayerMatches 
     INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID 
-    INNER JOIN Players ON PlayerMatches.playerID=Players.playerID
+    RIGHT OUTER JOIN Players ON PlayerMatches.playerID=Players.playerID
     GROUP BY pid
   ) subquery
 SET p.matchCount = subquery.matches
@@ -497,15 +497,15 @@ WHERE p.playerID = subquery.pid;
 -- Date: 02/06/2024
 -- Adapted from:
 -- Source URL: https://dba.stackexchange.com/questions/218762/how-to-update-from-join-with-group-by
-UPDATE Players p, (SELECT Players.playerID AS pid, COUNT(*) AS wins
-    FROM PlayerMatches 
-    INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID
-    INNER JOIN Players ON PlayerMatches.playerID=Players.playerID
-    WHERE resultId = (SELECT resultID FROM Results WHERE resultName='Win')
-    GROUP BY pid
-  ) subquery
-SET p.winCount = subquery.wins
-WHERE p.playerID = subquery.pid;
+UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(subquery.wins, 0) AS wins FROM (SELECT Players.playerID AS pid, COUNT(*) AS wins
+                            FROM PlayerMatches 
+                            INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID
+                            INNER JOIN Players ON PlayerMatches.playerID=Players.playerID
+                            WHERE resultId = (SELECT resultID FROM Results WHERE resultName='Win')
+                            GROUP BY pid) AS subquery RIGHT OUTER JOIN Players ON subquery.pid=Players.playerID
+  ) subquery2
+SET p.winCount = subquery2.wins
+WHERE p.playerID = subquery2.pid;
 
 -- --------------------------------------------------------
 

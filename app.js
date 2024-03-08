@@ -67,14 +67,6 @@ app.post('/matches/new', function(req,res){
         const { winningTeamID, matchDate, redScore, blueScore, matchDurationInHours } = req.body;
         let query1 = `INSERT INTO Matches (winningTeamID, matchDate, redScore, blueScore, matchDurationInHours) 
             VALUES (${winningTeamID},'${matchDate}',${redScore},${blueScore},${matchDurationInHours})`
-        let query2 = `UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(SUM(Matches.matchDurationInHours), 0) AS totalHours
-            FROM PlayerMatches 
-            INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID 
-            INNER JOIN Players ON PlayerMatches.playerID=Players.playerID
-            GROUP BY pid
-            ) subquery
-            SET p.hoursPlayed = subquery.totalHours
-            WHERE p.playerID = subquery.pid;`
         let errMessage = "You have failed to insert successfully!"
         let operation = 'inserted'
         db.pool.query(query1, function(error, rows, fields){
@@ -124,9 +116,42 @@ app.post('/matches/:matchID/edit', function(req,res){
         let errMessage = "You have failed to update successfully!"
         let operation = 'updated'
 
-        db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+        db.pool.query(query1, function(matchError, matchRows, matchFields){
+            if(matchError) {
+                res.render('error', {sql: matchError.sql, sqlMessage: matchError.sqlMessage, code: matchError.code,errMessage})
+                return
+            }
+            let query3 = `UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(SUM(Matches.matchDurationInHours), 0) AS totalHours, COUNT(Matches.matchID) AS matches
+                                    FROM PlayerMatches 
+                                    INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID
+                                    RIGHT OUTER Players ON PlayerMatches.playerID=Players.playerID
+                                    GROUP BY pid
+                                ) subquery
+                                SET p.hoursPlayed = subquery.totalHours,
+                                    p.matchCount = subquery.matches
+                                WHERE p.playerID = subquery.pid;`
+            let query4 = `UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(subquery.wins, 0) AS wins FROM (SELECT Players.playerID AS pid, COUNT(*) AS wins
+                                    FROM PlayerMatches 
+                                    INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID
+                                    INNER JOIN Players ON PlayerMatches.playerID=Players.playerID
+                                    WHERE resultId = (SELECT resultID FROM Results WHERE resultName='Win')
+                                    GROUP BY pid) AS subquery RIGHT OUTER JOIN Players ON subquery.pid=Players.playerID
+                                ) subquery2
+                                SET p.winCount = subquery2.wins
+                                WHERE p.playerID = subquery2.pid;`
+            db.pool.query(query3, function(playerError, playerRows, playerFields){
+                if(playerError) {
+                    res.render('error', {sql: playerError.sql, sqlMessage: playerError.sqlMessage, code: playerError.code,errMessage})
+                    return
+                }
+                db.pool.query(query4, function(playerError2, playerRows2, playerFields2){
+                    if(playerError2){
+                        res.render('error', {sql: playerError2.sql, sqlMessage: playerError2.sqlMessage, code: playerError2.code,errMessage})
+                        return
+                    }
+                    res.render('success', {operation, successes: matchRows.affectedRows + playerRows.affectedRows})
+                })
+            })
         })
     }
 })
@@ -150,9 +175,42 @@ app.post('/matches/:matchID/delete', function(req,res){
         let operation = 'deleted'
         let errMessage = "You have failed to delete successfully!"
 
-        db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+        db.pool.query(query1, function(matchError, matchRows, matchFields){
+            if(matchError) {
+                res.render('error', {sql: matchError.sql, sqlMessage: matchError.sqlMessage, code: matchError.code,errMessage})
+                return
+            }
+            let query3 = `UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(SUM(Matches.matchDurationInHours), 0) AS totalHours, COUNT(Matches.matchID) AS matches
+                                    FROM PlayerMatches 
+                                    INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID
+                                    RIGHT OUTER JOIN Players ON PlayerMatches.playerID=Players.playerID
+                                    GROUP BY pid
+                                ) subquery
+                                SET p.hoursPlayed = subquery.totalHours,
+                                    p.matchCount = subquery.matches
+                                WHERE p.playerID = subquery.pid;`
+            let query4 = `UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(subquery.wins, 0) AS wins FROM (SELECT Players.playerID AS pid, COUNT(*) AS wins
+                                    FROM PlayerMatches 
+                                    INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID
+                                    INNER JOIN Players ON PlayerMatches.playerID=Players.playerID
+                                    WHERE resultId = (SELECT resultID FROM Results WHERE resultName='Win')
+                                    GROUP BY pid) AS subquery RIGHT OUTER JOIN Players ON subquery.pid=Players.playerID
+                                ) subquery2
+                                SET p.winCount = subquery2.wins
+                                WHERE p.playerID = subquery2.pid;`
+            db.pool.query(query3, function(playerError, playerRows, playerFields){
+                if(playerError) {
+                    res.render('error', {sql: playerError.sql, sqlMessage: playerError.sqlMessage, code: playerError.code,errMessage})
+                    return
+                }
+                db.pool.query(query4, function(playerError2, playerRows2, playerFields2){
+                    if(playerError2){
+                        res.render('error', {sql: playerError2.sql, sqlMessage: playerError2.sqlMessage, code: playerError2.code,errMessage})
+                        return
+                    }
+                    res.render('success', {operation, successes: matchRows.affectedRows + playerRows.affectedRows})
+                })
+            })
         })
     }
 })
@@ -239,8 +297,8 @@ app.post('/playerMatches/new', function(req,res){
     {
         const { playerName, matchID, resultID, roleID, championID, killCount, deathCount, assistCount } = req.body;
         let query1 = `SELECT playerID FROM Players WHERE playerName='${playerName}'`
-        let errMessage = "You have failed to insert successfully!"
-        let operation = 'inserted'
+        let errMessage = "You have failed to insert and update successfully!"
+        let operation = 'inserted and updated'
 
         db.pool.query(query1, function(playerError, playerRows, playerFields){
             if(playerRows.length==0) {
@@ -252,8 +310,41 @@ app.post('/playerMatches/new', function(req,res){
                 VALUES (${playerID},${matchID},${resultID},${roleID},${championID},${killCount}, ${deathCount}, ${assistCount})`
 
             db.pool.query(query2, function(playerMatchesError, playerMatchesRows, playerMatchesFields){
-                if(playerMatchesError) res.render('error', {sql: playerMatchesError.sql, sqlMessage: playerMatchesError.sqlMessage, code: playerMatchesError.code,errMessage})
-                else res.render('success', {operation, successes: playerMatchesRows.affectedRows})
+                if(playerMatchesError) {
+                    res.render('error', {sql: playerMatchesError.sql, sqlMessage: playerMatchesError.sqlMessage, code: playerMatchesError.code,errMessage})
+                    return
+                }
+                let query3 = `UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(SUM(Matches.matchDurationInHours), 0) AS totalHours, COUNT(Matches.matchID) AS matches
+                                    FROM PlayerMatches 
+                                    INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID 
+                                    RIGHT OUTER JOIN Players ON PlayerMatches.playerID=${playerID}
+                                    GROUP BY pid
+                                ) subquery
+                                SET p.hoursPlayed = subquery.totalHours,
+                                    p.matchCount = subquery.matches
+                                WHERE p.playerID = ${playerID};`
+                let query4 = `UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(subquery.wins, 0) AS wins FROM (SELECT Players.playerID AS pid, COUNT(*) AS wins
+                                    FROM PlayerMatches 
+                                    INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID
+                                    INNER JOIN Players ON PlayerMatches.playerID=${playerID}
+                                    WHERE resultId = (SELECT resultID FROM Results WHERE resultName='Win')
+                                    GROUP BY pid) AS subquery RIGHT OUTER JOIN Players ON subquery.pid=Players.playerID
+                                ) subquery2
+                                SET p.winCount = subquery2.wins
+                                WHERE p.playerID = ${playerID};`
+                db.pool.query(query3, function(playerError, playerRows, playerFields){
+                    if(playerError) {
+                        res.render('error', {sql: playerError.sql, sqlMessage: playerError.sqlMessage, code: playerError.code,errMessage})
+                        return
+                    }
+                    db.pool.query(query4, function(playerError2, playerRows2, playerFields2){
+                        if(playerError2){
+                            res.render('error', {sql: playerError2.sql, sqlMessage: playerError2.sqlMessage, code: playerError2.code,errMessage})
+                            return
+                        }
+                        res.render('success', {operation, successes: playerMatchesRows.affectedRows + playerRows.affectedRows})
+                    })
+                })
             })
         })
     }
@@ -323,8 +414,41 @@ app.post('/playerMatches/:playerMatchID/edit', function(req,res){
             WHERE playerMatchID=${req.params.playerMatchID}`
 
             db.pool.query(query2, function(playerMatchesError, playerMatchesRows, playerMatchesFields){
-                if(playerMatchesError) res.render('error', {sql: playerMatchesError.sql, sqlMessage: playerMatchesError.sqlMessage, code: playerMatchesError.code,errMessage})
-                else res.render('success', {operation, successes: playerMatchesRows.affectedRows})
+                if(playerMatchesError) {
+                    res.render('error', {sql: playerMatchesError.sql, sqlMessage: playerMatchesError.sqlMessage, code: playerMatchesError.code,errMessage})
+                    return
+                }
+                let query3 = `UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(SUM(Matches.matchDurationInHours), 0) AS totalHours, COUNT(Matches.matchID) AS matches
+                                    FROM PlayerMatches 
+                                    INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID 
+                                    RIGHT OUTER JOIN Players ON PlayerMatches.playerID=${playerID}
+                                    GROUP BY pid
+                                ) subquery
+                                SET p.hoursPlayed = subquery.totalHours,
+                                    p.matchCount = subquery.matches
+                                WHERE p.playerID = ${playerID};`
+                let query4 = `UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(subquery.wins, 0) AS wins FROM (SELECT Players.playerID AS pid, COUNT(*) AS wins
+                                    FROM PlayerMatches 
+                                    INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID
+                                    INNER JOIN Players ON PlayerMatches.playerID=${playerID}
+                                    WHERE resultId = (SELECT resultID FROM Results WHERE resultName='Win')
+                                    GROUP BY pid) AS subquery RIGHT OUTER JOIN Players ON subquery.pid=Players.playerID
+                                ) subquery2
+                                SET p.winCount = subquery2.wins
+                                WHERE p.playerID = ${playerID};`
+                db.pool.query(query3, function(playerError, playerRows, playerFields){
+                    if(playerError) {
+                        res.render('error', {sql: playerError.sql, sqlMessage: playerError.sqlMessage, code: playerError.code,errMessage})
+                        return
+                    }
+                    db.pool.query(query4, function(playerError2, playerRows2, playerFields2){
+                        if(playerError2){
+                            res.render('error', {sql: playerError2.sql, sqlMessage: playerError2.sqlMessage, code: playerError2.code,errMessage})
+                            return
+                        }
+                        res.render('success', {operation, successes: playerMatchesRows.affectedRows + playerRows.affectedRows})
+                    })
+                })
             })
         })
     }
@@ -346,13 +470,50 @@ app.get('/playerMatches/:playerMatchID/delete', function(req,res){
 
 app.post('/playerMatches/:playerMatchID/delete', function(req,res){
     {
-        let query1 = `DELETE FROM PlayerMatches WHERE playerMatchID=${req.params.playerMatchID}`
-        let operation = 'deleted'
-        let errMessage = "You have failed to delete successfully!"
-
-        db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+        let query1 = `SELECT playerID FROM PlayerMatches WHERE playerMatchID = ${req.params.playerMatchID}`
+        let query2 = `DELETE FROM PlayerMatches WHERE playerMatchID=${req.params.playerMatchID}`
+        let operation = 'deleted and updated'
+        let errMessage = "You have failed to delete and update successfully!"
+        
+        db.pool.query(query1, function(playerError, playerRows, playerFields){
+            const playerID = playerRows[0].playerID;
+            db.pool.query(query2, function(playerMatchesError, playerMatchesRows, playerMatchesFields){
+                if(playerMatchesError) {
+                    res.render('error', {sql: playerMatchesError.sql, sqlMessage: playerMatchesError.sqlMessage, code: playerMatchesError.code,errMessage})
+                    return
+                }
+                let query3 = `UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(SUM(Matches.matchDurationInHours), 0) AS totalHours, COUNT(Matches.matchID) AS matches
+                                    FROM PlayerMatches 
+                                    INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID 
+                                    RIGHT OUTER JOIN Players ON PlayerMatches.playerID=${playerID}
+                                    GROUP BY pid
+                                ) subquery
+                                SET p.hoursPlayed = subquery.totalHours,
+                                    p.matchCount = subquery.matches
+                                WHERE p.playerID = ${playerID};`
+                let query4 = `UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(subquery.wins, 0) AS wins FROM (SELECT Players.playerID AS pid, COUNT(*) AS wins
+                                    FROM PlayerMatches 
+                                    INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID
+                                    INNER JOIN Players ON PlayerMatches.playerID=${playerID}
+                                    WHERE resultId = (SELECT resultID FROM Results WHERE resultName='Win')
+                                    GROUP BY pid) AS subquery RIGHT OUTER JOIN Players ON subquery.pid=Players.playerID
+                                ) subquery2
+                                SET p.winCount = subquery2.wins
+                                WHERE p.playerID = ${playerID};`
+                db.pool.query(query3, function(playerError2, playerRows2, playerFields2){
+                    if(playerError2) {
+                        res.render('error', {sql: playerError2.sql, sqlMessage: playerError2.sqlMessage, code: playerError2.code,errMessage})
+                        return
+                    }
+                    db.pool.query(query4, function(playerError3, playerRows3, playerFields3){
+                        if(playerError3){
+                            res.render('error', {sql: playerError3.sql, sqlMessage: playerError3.sqlMessage, code: playerError3.code,errMessage})
+                            return
+                        }
+                        res.render('success', {operation, successes: playerMatchesRows.affectedRows + playerRows3.affectedRows})
+                    })
+                })
+            })
         })
     }
 })
@@ -390,8 +551,8 @@ app.post('/players/new', function(req,res){
         let errMessage = "You have failed to insert successfully!"
         let operation = 'inserted'
 
-        if (typeof playerName === "string" && playerName.length === 0) {
-            `INSERT INTO Players (rankID, playerName, matchCount, winCount, hoursPlayed) VALUES (${rankID},null,0,0,0)`
+        if (typeof playerName === "string" && playerName.trim().length === 0) {
+            query1 = `INSERT INTO Players (rankID, playerName, matchCount, winCount, hoursPlayed) VALUES (${rankID},null,0,0,0)`
         }
 
         db.pool.query(query1, function(error, rows, fields){
@@ -429,7 +590,7 @@ app.post('/players/:playerID/edit', function(req,res){
         let errMessage = "You have failed to update successfully!"
         let operation = 'updated'
 
-        const playerName = typeof req.body.playerName === "string" && req.body.playerName.length === 0 ? 'null' : `'${req.body.playerName}'`
+        const playerName = typeof req.body.playerName === "string" && req.body.playerName.trim().length === 0 ? 'badstring' : `'${req.body.playerName}'`
 
         let query1 = `UPDATE Players 
             SET rankID= ${rankID}, 
@@ -598,7 +759,7 @@ app.post('/ranks/new', function(req,res){
         let errMessage = "You have failed to insert successfully!"
         let operation = 'inserted'
 
-        if (typeof rankName === "string" && rankName.length === 0) {
+        if (typeof rankName === "string" && rankName.trim().length === 0) {
             query1 = `INSERT INTO Ranks (rankName) VALUES (null)`
         }
 
@@ -692,7 +853,7 @@ app.post('/results/new', function(req,res){
         let errMessage = "You have failed to insert successfully!"
         let operation = 'inserted'
 
-        if (typeof resultName === "string" && resultName.length === 0) {
+        if (typeof resultName === "string" && resultName.trim().length === 0) {
             query1 = `INSERT INTO Results (resultName) VALUES (null)`
         }
 
@@ -786,7 +947,7 @@ app.post('/roles/new', function(req,res){
         let errMessage = "You have failed to insert successfully!"
         let operation = 'inserted'
 
-        if (typeof roleName === "string" && roleName.length === 0) {
+        if (typeof roleName === "string" && roleName.trim().length === 0) {
             query1 = `INSERT INTO Roles (roleName) VALUES (null)`
         }
 
@@ -880,7 +1041,7 @@ app.post('/teams/new', function(req,res){
         let errMessage = "You have failed to insert successfully!"
         let operation = 'inserted'
 
-        if (typeof teamName === "string" && teamName.length === 0) {
+        if (typeof teamName === "string" && teamName.trim().length === 0) {
             query1 = `INSERT INTO Teams (teamName) VALUES (null)`
         }
 
