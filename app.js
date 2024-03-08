@@ -590,7 +590,7 @@ app.post('/players/:playerID/edit', function(req,res){
         let errMessage = "You have failed to update successfully!"
         let operation = 'updated'
 
-        const playerName = typeof req.body.playerName === "string" && req.body.playerName.length === 0 ? 'null' : `'${req.body.playerName}'`
+        const playerName = typeof req.body.playerName === "string" && req.body.playerName.trim().length === 0 ? 'null' : `'${req.body.playerName}'`
 
         let query1 = `UPDATE Players 
             SET rankID= ${rankID}, 
