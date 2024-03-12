@@ -128,7 +128,7 @@ app.post('/matches/:matchID/edit', function(req,res){
             let query3 = `UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(SUM(Matches.matchDurationInHours), 0) AS totalHours, COUNT(Matches.matchID) AS matches
                                     FROM PlayerMatches 
                                     INNER JOIN Matches ON PlayerMatches.matchID=Matches.matchID
-                                    RIGHT OUTER Players ON PlayerMatches.playerID=Players.playerID
+                                    RIGHT OUTER JOIN Players ON PlayerMatches.playerID=Players.playerID
                                     GROUP BY pid
                                 ) subquery
                                 SET p.hoursPlayed = subquery.totalHours,
