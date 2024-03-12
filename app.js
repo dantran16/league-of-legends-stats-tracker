@@ -679,7 +679,7 @@ app.get('/champions/new', function(req, res){
 app.post('/champions/new', function(req,res){
     {
         const { championName } = req.body;
-        let query1 = `INSERT INTO Champions (championName) VALUES ('${championName}')`
+        let query1 = `INSERT INTO Champions (championName) VALUES ("${championName}")`
         let errMessage = "You have failed to insert successfully!"
         let operation = 'inserted'
         let url = '/champions'
@@ -712,7 +712,7 @@ app.post('/champions/:championID/edit', function(req,res){
     {
         const { championName } = req.body;
         const { championID } = req.params;
-        let query1 = `UPDATE Champions SET championName= '${championName}' WHERE championID= ${championID}`
+        let query1 = `UPDATE Champions SET championName= "${championName}" WHERE championID= ${championID}`
         let errMessage = "You have failed to update successfully!"
         let operation = 'updated'
         let url = '/champions'
