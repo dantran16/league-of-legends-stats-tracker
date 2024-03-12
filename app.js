@@ -69,9 +69,11 @@ app.post('/matches/new', function(req,res){
             VALUES (${winningTeamID},'${matchDate}',${redScore},${blueScore},${matchDurationInHours})`
         let errMessage = "You have failed to insert successfully!"
         let operation = 'inserted'
+        let url = '/matches'
+        let label = 'matches'
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -115,10 +117,12 @@ app.post('/matches/:matchID/edit', function(req,res){
             WHERE matchID= ${matchID}`
         let errMessage = "You have failed to update successfully!"
         let operation = 'updated'
+        let url = '/matches'
+        let label = 'Matches'
 
         db.pool.query(query1, function(matchError, matchRows, matchFields){
             if(matchError) {
-                res.render('error', {sql: matchError.sql, sqlMessage: matchError.sqlMessage, code: matchError.code,errMessage})
+                res.render('error', {sql: matchError.sql, sqlMessage: matchError.sqlMessage, code: matchError.code,errMessage, back: {url, label}})
                 return
             }
             let query3 = `UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(SUM(Matches.matchDurationInHours), 0) AS totalHours, COUNT(Matches.matchID) AS matches
@@ -141,15 +145,15 @@ app.post('/matches/:matchID/edit', function(req,res){
                                 WHERE p.playerID = subquery2.pid;`
             db.pool.query(query3, function(playerError, playerRows, playerFields){
                 if(playerError) {
-                    res.render('error', {sql: playerError.sql, sqlMessage: playerError.sqlMessage, code: playerError.code,errMessage})
+                    res.render('error', {sql: playerError.sql, sqlMessage: playerError.sqlMessage, code: playerError.code,errMessage, back: {url, label}})
                     return
                 }
                 db.pool.query(query4, function(playerError2, playerRows2, playerFields2){
                     if(playerError2){
-                        res.render('error', {sql: playerError2.sql, sqlMessage: playerError2.sqlMessage, code: playerError2.code,errMessage})
+                        res.render('error', {sql: playerError2.sql, sqlMessage: playerError2.sqlMessage, code: playerError2.code,errMessage, back: {url, label}})
                         return
                     }
-                    res.render('success', {operation, successes: matchRows.affectedRows + playerRows.affectedRows})
+                    res.render('success', {operation, successes: matchRows.affectedRows + playerRows.affectedRows, back: {url, label}})
                 })
             })
         })
@@ -174,10 +178,12 @@ app.post('/matches/:matchID/delete', function(req,res){
         let query1 = `DELETE FROM Matches WHERE matchID= ${matchID}`
         let operation = 'deleted'
         let errMessage = "You have failed to delete successfully!"
+        let url = '/matches'
+        let label = 'Matches'
 
         db.pool.query(query1, function(matchError, matchRows, matchFields){
             if(matchError) {
-                res.render('error', {sql: matchError.sql, sqlMessage: matchError.sqlMessage, code: matchError.code,errMessage})
+                res.render('error', {sql: matchError.sql, sqlMessage: matchError.sqlMessage, code: matchError.code,errMessage, back: {url, label}})
                 return
             }
             let query3 = `UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(SUM(Matches.matchDurationInHours), 0) AS totalHours, COUNT(Matches.matchID) AS matches
@@ -200,15 +206,15 @@ app.post('/matches/:matchID/delete', function(req,res){
                                 WHERE p.playerID = subquery2.pid;`
             db.pool.query(query3, function(playerError, playerRows, playerFields){
                 if(playerError) {
-                    res.render('error', {sql: playerError.sql, sqlMessage: playerError.sqlMessage, code: playerError.code,errMessage})
+                    res.render('error', {sql: playerError.sql, sqlMessage: playerError.sqlMessage, code: playerError.code,errMessage, back: {url, label}})
                     return
                 }
                 db.pool.query(query4, function(playerError2, playerRows2, playerFields2){
                     if(playerError2){
-                        res.render('error', {sql: playerError2.sql, sqlMessage: playerError2.sqlMessage, code: playerError2.code,errMessage})
+                        res.render('error', {sql: playerError2.sql, sqlMessage: playerError2.sqlMessage, code: playerError2.code,errMessage, back: {url, label}})
                         return
                     }
-                    res.render('success', {operation, successes: matchRows.affectedRows + playerRows.affectedRows})
+                    res.render('success', {operation, successes: matchRows.affectedRows + playerRows.affectedRows, back: {url, label}})
                 })
             })
         })
@@ -299,10 +305,12 @@ app.post('/playerMatches/new', function(req,res){
         let query1 = `SELECT playerID FROM Players WHERE playerName='${playerName}'`
         let errMessage = "You have failed to insert and update successfully!"
         let operation = 'inserted and updated'
+        let url = '/playerMatches'
+        let label = 'Player Matches'
 
         db.pool.query(query1, function(playerError, playerRows, playerFields){
             if(playerRows.length==0) {
-                res.render('error', {sql: query1, sqlMessage: `No records for '${playerName}'`, code: "n/a", errMessage})
+                res.render('error', {sql: query1, sqlMessage: `No records for '${playerName}'`, code: "n/a", errMessage, back: {url, label}})
                 return
             }
             const playerID = playerRows[0].playerID;
@@ -311,7 +319,7 @@ app.post('/playerMatches/new', function(req,res){
 
             db.pool.query(query2, function(playerMatchesError, playerMatchesRows, playerMatchesFields){
                 if(playerMatchesError) {
-                    res.render('error', {sql: playerMatchesError.sql, sqlMessage: playerMatchesError.sqlMessage, code: playerMatchesError.code,errMessage})
+                    res.render('error', {sql: playerMatchesError.sql, sqlMessage: playerMatchesError.sqlMessage, code: playerMatchesError.code,errMessage, back: {url, label}})
                     return
                 }
                 let query3 = `UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(SUM(Matches.matchDurationInHours), 0) AS totalHours, COUNT(Matches.matchID) AS matches
@@ -334,15 +342,15 @@ app.post('/playerMatches/new', function(req,res){
                                 WHERE p.playerID = ${playerID};`
                 db.pool.query(query3, function(playerError, playerRows, playerFields){
                     if(playerError) {
-                        res.render('error', {sql: playerError.sql, sqlMessage: playerError.sqlMessage, code: playerError.code,errMessage})
+                        res.render('error', {sql: playerError.sql, sqlMessage: playerError.sqlMessage, code: playerError.code,errMessage, back: {url, label}})
                         return
                     }
                     db.pool.query(query4, function(playerError2, playerRows2, playerFields2){
                         if(playerError2){
-                            res.render('error', {sql: playerError2.sql, sqlMessage: playerError2.sqlMessage, code: playerError2.code,errMessage})
+                            res.render('error', {sql: playerError2.sql, sqlMessage: playerError2.sqlMessage, code: playerError2.code,errMessage, back: {url, label}})
                             return
                         }
-                        res.render('success', {operation, successes: playerMatchesRows.affectedRows + playerRows.affectedRows})
+                        res.render('success', {operation, successes: playerMatchesRows.affectedRows + playerRows.affectedRows, back: {url, label}})
                     })
                 })
             })
@@ -395,6 +403,8 @@ app.post('/playerMatches/:playerMatchID/edit', function(req,res){
         let query1 = `SELECT playerID FROM Players WHERE playerName='${playerName}'`
         let errMessage = "You have failed to update successfully!"
         let operation = 'updated'
+        let url = '/playerMatches'
+        let label = 'Player Matches'
         
         db.pool.query(query1, function(playerError, playerRows, playerFields){
             const playerID = playerRows.length ? `${playerRows[0].playerID}`: "null"
@@ -415,7 +425,7 @@ app.post('/playerMatches/:playerMatchID/edit', function(req,res){
 
             db.pool.query(query2, function(playerMatchesError, playerMatchesRows, playerMatchesFields){
                 if(playerMatchesError) {
-                    res.render('error', {sql: playerMatchesError.sql, sqlMessage: playerMatchesError.sqlMessage, code: playerMatchesError.code,errMessage})
+                    res.render('error', {sql: playerMatchesError.sql, sqlMessage: playerMatchesError.sqlMessage, code: playerMatchesError.code,errMessage, back: {url, label}})
                     return
                 }
                 let query3 = `UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(SUM(Matches.matchDurationInHours), 0) AS totalHours, COUNT(Matches.matchID) AS matches
@@ -438,15 +448,15 @@ app.post('/playerMatches/:playerMatchID/edit', function(req,res){
                                 WHERE p.playerID = ${playerID};`
                 db.pool.query(query3, function(playerError, playerRows, playerFields){
                     if(playerError) {
-                        res.render('error', {sql: playerError.sql, sqlMessage: playerError.sqlMessage, code: playerError.code,errMessage})
+                        res.render('error', {sql: playerError.sql, sqlMessage: playerError.sqlMessage, code: playerError.code,errMessage, back: {url, label}})
                         return
                     }
                     db.pool.query(query4, function(playerError2, playerRows2, playerFields2){
                         if(playerError2){
-                            res.render('error', {sql: playerError2.sql, sqlMessage: playerError2.sqlMessage, code: playerError2.code,errMessage})
+                            res.render('error', {sql: playerError2.sql, sqlMessage: playerError2.sqlMessage, code: playerError2.code,errMessage, back: {url, label}})
                             return
                         }
-                        res.render('success', {operation, successes: playerMatchesRows.affectedRows + playerRows.affectedRows})
+                        res.render('success', {operation, successes: playerMatchesRows.affectedRows + playerRows.affectedRows, back: {url, label}})
                     })
                 })
             })
@@ -474,12 +484,14 @@ app.post('/playerMatches/:playerMatchID/delete', function(req,res){
         let query2 = `DELETE FROM PlayerMatches WHERE playerMatchID=${req.params.playerMatchID}`
         let operation = 'deleted and updated'
         let errMessage = "You have failed to delete and update successfully!"
+        let url = '/playerMatches'
+        let label = 'Player Matches'
         
         db.pool.query(query1, function(playerError, playerRows, playerFields){
             const playerID = playerRows[0].playerID;
             db.pool.query(query2, function(playerMatchesError, playerMatchesRows, playerMatchesFields){
                 if(playerMatchesError) {
-                    res.render('error', {sql: playerMatchesError.sql, sqlMessage: playerMatchesError.sqlMessage, code: playerMatchesError.code,errMessage})
+                    res.render('error', {sql: playerMatchesError.sql, sqlMessage: playerMatchesError.sqlMessage, code: playerMatchesError.code,errMessage, back: {url, label}})
                     return
                 }
                 let query3 = `UPDATE Players p, (SELECT Players.playerID AS pid, COALESCE(SUM(Matches.matchDurationInHours), 0) AS totalHours, COUNT(Matches.matchID) AS matches
@@ -502,15 +514,15 @@ app.post('/playerMatches/:playerMatchID/delete', function(req,res){
                                 WHERE p.playerID = ${playerID};`
                 db.pool.query(query3, function(playerError2, playerRows2, playerFields2){
                     if(playerError2) {
-                        res.render('error', {sql: playerError2.sql, sqlMessage: playerError2.sqlMessage, code: playerError2.code,errMessage})
+                        res.render('error', {sql: playerError2.sql, sqlMessage: playerError2.sqlMessage, code: playerError2.code,errMessage, back: {url, label}})
                         return
                     }
                     db.pool.query(query4, function(playerError3, playerRows3, playerFields3){
                         if(playerError3){
-                            res.render('error', {sql: playerError3.sql, sqlMessage: playerError3.sqlMessage, code: playerError3.code,errMessage})
+                            res.render('error', {sql: playerError3.sql, sqlMessage: playerError3.sqlMessage, code: playerError3.code,errMessage, back: {url, label}})
                             return
                         }
-                        res.render('success', {operation, successes: playerMatchesRows.affectedRows + playerRows3.affectedRows})
+                        res.render('success', {operation, successes: playerMatchesRows.affectedRows + playerRows3.affectedRows, back: {url, label}})
                     })
                 })
             })
@@ -550,14 +562,16 @@ app.post('/players/new', function(req,res){
         let query1 = `INSERT INTO Players (rankID, playerName, matchCount, winCount, hoursPlayed) VALUES (${rankID},'${playerName}',0,0,0)`
         let errMessage = "You have failed to insert successfully!"
         let operation = 'inserted'
+        let url = '/players'
+        let label = 'Players'
 
         if (typeof playerName === "string" && playerName.trim().length === 0) {
             query1 = `INSERT INTO Players (rankID, playerName, matchCount, winCount, hoursPlayed) VALUES (${rankID},null,0,0,0)`
         }
 
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -589,6 +603,8 @@ app.post('/players/:playerID/edit', function(req,res){
 
         let errMessage = "You have failed to update successfully!"
         let operation = 'updated'
+        let url = '/players'
+        let label = 'Players'
 
         const playerName = typeof req.body.playerName === "string" && req.body.playerName.trim().length === 0 ? 'badstring' : `'${req.body.playerName}'`
 
@@ -607,8 +623,8 @@ app.post('/players/:playerID/edit', function(req,res){
             WHERE playerID= ${playerID}`
         
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -630,9 +646,11 @@ app.post('/players/:playerID/delete', function(req,res){
         let query1 = `DELETE FROM Players WHERE playerID=${req.params.playerID}`
         let operation = 'deleted'
         let errMessage = "You have failed to delete successfully!"
+        let url = '/players'
+        let label = 'Players'
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -664,14 +682,16 @@ app.post('/champions/new', function(req,res){
         let query1 = `INSERT INTO Champions (championName) VALUES ('${championName}')`
         let errMessage = "You have failed to insert successfully!"
         let operation = 'inserted'
+        let url = '/champions'
+        let label = 'Champions'
 
         if (typeof championName === "string" && championName.trim().length === 0) {
             query1 = `INSERT INTO Champions (championName) VALUES (null)`
         }
 
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -695,14 +715,16 @@ app.post('/champions/:championID/edit', function(req,res){
         let query1 = `UPDATE Champions SET championName= '${championName}' WHERE championID= ${championID}`
         let errMessage = "You have failed to update successfully!"
         let operation = 'updated'
+        let url = '/champions'
+        let label = 'Champions'
         
         if (typeof championName === "string" && championName.trim().length === 0) {
             query1 = `UPDATE Champions SET championName=badstring WHERE championID= ${championID}`
         }
 
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -724,9 +746,11 @@ app.post('/champions/:championID/delete', function(req,res){
         let query1 = `DELETE FROM Champions WHERE championID=${req.params.championID}`
         let operation = 'deleted'
         let errMessage = "You have failed to delete successfully!"
+        let url = '/champions'
+        let label = 'Champions'
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -758,14 +782,16 @@ app.post('/ranks/new', function(req,res){
         let query1 = `INSERT INTO Ranks (rankName) VALUES ('${rankName}')`
         let errMessage = "You have failed to insert successfully!"
         let operation = 'inserted'
+        let url = '/ranks'
+        let label = 'Ranks'
 
         if (typeof rankName === "string" && rankName.trim().length === 0) {
             query1 = `INSERT INTO Ranks (rankName) VALUES (null)`
         }
 
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -789,14 +815,16 @@ app.post('/ranks/:rankID/edit', function(req,res){
         let query1 = `UPDATE Ranks SET rankName= '${rankName}' WHERE rankID= ${rankID}`
         let errMessage = "You have failed to update successfully!"
         let operation = 'updated'
+        let url = '/ranks'
+        let label = 'Ranks'
         
         if (typeof rankName === "string" && rankName.trim().length === 0) {
             query1 = `UPDATE Ranks SET rankName=badstring WHERE rankID= ${rankID}`
         }
 
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -818,9 +846,11 @@ app.post('/ranks/:rankID/delete', function(req,res){
         let query1 = `DELETE FROM Ranks WHERE rankID=${req.params.rankID}`
         let operation = 'deleted'
         let errMessage = "You have failed to delete successfully!"
+        let url = '/ranks'
+        let label = 'Ranks'
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -852,14 +882,16 @@ app.post('/results/new', function(req,res){
         let query1 = `INSERT INTO Results (resultName) VALUES ('${resultName}')`
         let errMessage = "You have failed to insert successfully!"
         let operation = 'inserted'
+        let url = '/results'
+        let label = 'Results'
 
         if (typeof resultName === "string" && resultName.trim().length === 0) {
             query1 = `INSERT INTO Results (resultName) VALUES (null)`
         }
 
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -883,14 +915,15 @@ app.post('/results/:resultID/edit', function(req,res){
         let query1 = `UPDATE Results SET resultName= '${resultName}' WHERE resultID= ${resultID}`
         let errMessage = "You have failed to update successfully!"
         let operation = 'updated'
-        
+        let url = '/results'
+        let label = 'Results'
         if (typeof resultName === "string" && resultName.trim().length === 0) {
             query1 = `UPDATE Results SET resultName=badstring WHERE resultID= ${resultID}`
         }
 
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -912,9 +945,11 @@ app.post('/results/:resultID/delete', function(req,res){
         let query1 = `DELETE FROM Results WHERE resultID=${req.params.resultID}`
         let operation = 'deleted'
         let errMessage = "You have failed to delete successfully!"
+        let url = '/results'
+        let label = 'Results'
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -946,14 +981,16 @@ app.post('/roles/new', function(req,res){
         let query1 = `INSERT INTO Roles (roleName) VALUES ('${roleName}')`
         let errMessage = "You have failed to insert successfully!"
         let operation = 'inserted'
+        let url = '/roles'
+        let label = 'Roles'
 
         if (typeof roleName === "string" && roleName.trim().length === 0) {
             query1 = `INSERT INTO Roles (roleName) VALUES (null)`
         }
 
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -977,14 +1014,16 @@ app.post('/roles/:roleID/edit', function(req,res){
         let query1 = `UPDATE Roles SET roleName= '${roleName}' WHERE roleID= ${roleID}`
         let errMessage = "You have failed to update successfully!"
         let operation = 'updated'
+        let url = '/roles'
+        let label = 'Roles'
         
         if (typeof roleName === "string" && roleName.trim().length === 0) {
             query1 = `UPDATE Roles SET roleName=badstring WHERE roleID= ${roleID}`
         }
 
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -1006,9 +1045,11 @@ app.post('/roles/:roleID/delete', function(req,res){
         let query1 = `DELETE FROM Roles WHERE roleID=${req.params.roleID}`
         let operation = 'deleted'
         let errMessage = "You have failed to delete successfully!"
+        let url = '/roles'
+        let label = 'Roles'
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -1040,14 +1081,15 @@ app.post('/teams/new', function(req,res){
         let query1 = `INSERT INTO Teams (teamName) VALUES ('${teamName}')`
         let errMessage = "You have failed to insert successfully!"
         let operation = 'inserted'
-
+        let url = '/teams'
+        let label = 'Teams'
         if (typeof teamName === "string" && teamName.trim().length === 0) {
             query1 = `INSERT INTO Teams (teamName) VALUES (null)`
         }
 
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -1071,14 +1113,15 @@ app.post('/teams/:teamID/edit', function(req,res){
         let query1 = `UPDATE Teams SET teamName= '${teamName}' WHERE teamID= ${teamID}`
         let errMessage = "You have failed to update successfully!"
         let operation = 'updated'
-        
+        let url = '/teams'
+        let label = 'Teams'
         if (typeof teamName === "string" && teamName.trim().length === 0) {
             query1 = `UPDATE Teams SET teamName=badstring WHERE teamID= ${teamID}`
         }
 
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label}})
         })
     }
 })
@@ -1100,9 +1143,11 @@ app.post('/teams/:teamID/delete', function(req,res){
         let query1 = `DELETE FROM Teams WHERE teamID=${req.params.teamID}`
         let operation = 'deleted'
         let errMessage = "You have failed to delete successfully!"
+        let url = '/teams'
+        let label = 'Teams'
         db.pool.query(query1, function(error, rows, fields){
-            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage})
-            else res.render('success', {operation, successes: rows.affectedRows})
+            if(error) res.render('error', {sql: error.sql, sqlMessage: error.sqlMessage, code: error.code,errMessage, back: {url, label}})
+            else res.render('success', {operation, successes: rows.affectedRows, back: {url, label} })
         })
     }
 })
