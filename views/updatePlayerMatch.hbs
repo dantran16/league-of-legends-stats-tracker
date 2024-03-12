@@ -1,9 +1,9 @@
-{{!-- 
-    Citation for the if/else function:
-    Date: 2/25/2024
-    Adapted from: 
-    Source URL: https://stackoverflow.com/questions/10736907/handlebars-js-else-if
---}}
+<!-- 
+  Citation for the following function:
+  Date: 2/11/2024
+  Adapted from: 
+  Source URL: https://canvas.oregonstate.edu/courses/1946034/pages/exploration-web-application-technology?module_item_id=23809327
+-->
 <div class="update">
     <form id="addPlayerMatch" method="POST" action="/playerMatches/{{this.playerMatch.playerMatchID}}/edit">
         <legend><h3>Update PlayerMatch</h3></legend>
@@ -20,7 +20,12 @@
               <label>Role</label>
               <select name="roleID">
                 {{#each roles}}
-                    
+                    {{!-- 
+                      Citation for the if/else function:
+                      Date: 2/25/2024
+                      Adapted from: 
+                      Source URL: https://stackoverflow.com/questions/10736907/handlebars-js-else-if
+                    --}}
                     {{#if this.selected}}
                         <option selected value="{{this.roleID}}">{{this.roleName}}</option>
                     {{else}}

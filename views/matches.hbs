@@ -1,5 +1,12 @@
+{{!--
+Citation for the following file:
+Date: 2/18/2024
+Based on:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
+--}}
 <div class="browse" style="display: block">
     <h2>Browse Matches</h2>
+    <a class="newbutton" href="/matches/new">New Matches</a>
     {{!-- Create a table --}}
     <table border="1" cellpadding="5">
 
@@ -8,7 +15,7 @@
             {{!-- For just the first row, we print each key of the row object as a header cell so we
             know what each column means when the page renders --}}
             <tr>
-                <th colspan="2" class="new"><a href="/matches/new">New Entry</a></th>
+                <th colspan="2"></th>
                 {{#each data.[0]}}
                 <th>
                     {{@key}}
