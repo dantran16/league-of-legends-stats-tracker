@@ -13,7 +13,19 @@
             </div>
 
             <div class="field">
-              <label> Player Name </label> <input type="text" name="playerName" value="{{this.playerMatch.playerName}}">
+              <label> Player Name </label> <input list="player-names" type="text" name="playerName" value="{{this.playerMatch.playerName}}">
+              {{!-- 
+                Citation for the following function:
+                Date: 3/12/2024
+                Adapted from:
+                Source URL: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist 
+              --}}
+              <datalist id="player-names">
+                
+                {{#each players}}
+                  <option value="{{this.playerName}}"></option>
+                {{/each}}
+              </datalist>
             </div>
 
             <div class="field">

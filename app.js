@@ -221,14 +221,17 @@ app.get('/playerMatches/new', function(req, res){
     {
         let query1 = `SELECT roleID, roleName FROM Roles`
         let query2 = `SELECT resultID, resultName FROM Results`
-        let query3 = `SELECT championID, championName FROM Champions`
+        let query3 = `SELECT playerName FROM Players`
+        let query4 = `SELECT championID, championName FROM Champions`
         // Query for roles
         db.pool.query(query1, function(roleError, roleRows, rowFields){
             // Query for results
             db.pool.query(query2, function(resultError, resultRows, resultFields){
                 // Query for champions
-                db.pool.query(query3, function(championError, championRows, championFields){
-                    res.render('newPlayerMatch', { roles: roleRows, results: resultRows, champions: championRows } )
+                db.pool.query(query3, function(playerError, playerRows, playerFields){
+                    db.pool.query(query3, function(championError, championRows, championFields){
+                        res.render('newPlayerMatch', { roles: roleRows, results: resultRows, champions: championRows, players: playerRows } )
+                    })
                 })
             })
         })
@@ -265,7 +268,8 @@ app.get('/playerMatches/:playerMatchID/edit', function(req,res){
         let query1 = `SELECT roleID, roleName FROM Roles`
         let query2 = `SELECT resultID, resultName FROM Results`
         let query3 = `SELECT championID, championName FROM Champions`
-        let query4 = `SELECT playerMatchID, Matches.matchID, Players.playerName, Roles.roleID, Results.resultID, Champions.championID, 
+        let query4 = `SELECT playerName FROM Players`
+        let query5 = `SELECT playerMatchID, Matches.matchID, Players.playerName, Roles.roleID, Results.resultID, Champions.championID, 
             killCount, deathCount, assistCount FROM PlayerMatches
             LEFT JOIN Players ON PlayerMatches.playerID = Players.playerID 
             INNER JOIN Matches ON PlayerMatches.matchID = Matches.matchID
@@ -280,17 +284,22 @@ app.get('/playerMatches/:playerMatchID/edit', function(req,res){
             db.pool.query(query2, function(resultError, resultRows, resultFields){
                 // Query for champions
                 db.pool.query(query3, function(championError, championRows, championFields){
-                    db.pool.query(query4, function(playerMatchError, playerMatchRows, playerMatchFields){
-                        resultRows.forEach(result => {
-                            result.selected = playerMatchRows[0].resultID === result.resultID
+                    db.pool.query(query4, function(playerError, playerRows, playerFields){
+                        db.pool.query(query5, function(playerMatchError, playerMatchRows, playerMatchFields){
+                            playerRows.forEach(player => {
+                                player.selected = playerMatchRows[0].playerName  === player.playerName
+                            })
+                            resultRows.forEach(result => {
+                                result.selected = playerMatchRows[0].resultID === result.resultID
+                            })
+                            roleRows.forEach(role => {
+                                role.selected = playerMatchRows[0].roleID === role.roleID
+                            })
+                            championRows.forEach(champion => {
+                                champion.selected = playerMatchRows[0].championID === champion.championID
+                            })
+                            res.render('updatePlayerMatch', { roles: roleRows, results: resultRows, champions: championRows, playerMatch: playerMatchRows[0], players: playerRows } )
                         })
-                        roleRows.forEach(role => {
-                            role.selected = playerMatchRows[0].roleID === role.roleID
-                        })
-                        championRows.forEach(champion => {
-                            champion.selected = playerMatchRows[0].championID === champion.championID
-                        })
-                        res.render('updatePlayerMatch', { roles: roleRows, results: resultRows, champions: championRows, playerMatch: playerMatchRows[0] } )
                     })
                 })
             })
