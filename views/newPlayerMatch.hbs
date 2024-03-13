@@ -9,7 +9,12 @@
       <legend><h3>Add PlayerMatch</h3></legend>
         <fieldset class="fields">
           <div class="field">
-            <label> Match ID </label> <input type="text" name="matchID">
+            <label> Match ID </label> <input list="match-ids" type="text" name="matchID">
+            <datalist id="player-names">
+              {{#each matches}}
+                <option value="{{this.matchID}}"></option>
+              {{/each}}
+            </datalist>
           </div>
           
           {{!-- 

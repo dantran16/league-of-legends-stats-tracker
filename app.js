@@ -286,15 +286,18 @@ app.get('/playerMatches/new', function(req, res){
         let query1 = `SELECT roleID, roleName FROM Roles`
         let query2 = `SELECT resultID, resultName FROM Results`
         let query3 = `SELECT playerName FROM Players`
-        let query4 = `SELECT championID, championName FROM Champions`
+        let query4 = `SELECT matchID FROM Matches`
+        let query5 = `SELECT championID, championName FROM Champions`
         // Query for roles
         db.pool.query(query1, function(roleError, roleRows, rowFields){
             // Query for results
             db.pool.query(query2, function(resultError, resultRows, resultFields){
                 // Query for champions
                 db.pool.query(query3, function(playerError, playerRows, playerFields){
-                    db.pool.query(query3, function(championError, championRows, championFields){
-                        res.render('newPlayerMatch', { roles: roleRows, results: resultRows, champions: championRows, players: playerRows } )
+                    db.pool.query(query4, function(matchError, matchRows, matchFields){
+                        db.pool.query(query5, function(championError, championRows, championFields){
+                            res.render('newPlayerMatch', { roles: roleRows, results: resultRows, champions: championRows, players: playerRows, matches: matchRows } )
+                        })
                     })
                 })
             })
